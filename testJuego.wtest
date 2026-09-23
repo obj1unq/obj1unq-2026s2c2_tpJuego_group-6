@@ -1,0 +1,14 @@
+import juego.pepita
+import mainJuego.config
+
+describe "group of tests for pepita" {
+
+  method initialize() {
+    config.configurarEscenario()
+  }
+  test "pepita tiene posicion e imagen" {
+    assert.equals(game.at(5,5), pepita.position())
+    assert.equals("pepita.png", pepita.image())
+  }
+
+}
