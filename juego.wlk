@@ -90,3 +90,20 @@ object tablero {
     }
 
 }
+
+object dadoAleatorio1 {
+    const property position = game.at(9,4)
+    const dadosAleatorios = ["dadolado1.png", "dadolado2.png", "dadolado3.png", "dadolado4.png", "dadolado5.png", "dadolado6.png"]
+    var dadoActual = "dadolado1.png"
+
+    method image() {
+      return dadoActual
+    }
+
+    method tirarDados() {
+      dadoActual = dadosAleatorios.anyOne()
+    }
+}
+
+
+
