@@ -8,7 +8,7 @@
 
 ## Capturas
 
-(agregar)
+![alt text](image.png)
 
 ## Reglas de Juego / Instrucciones
 
@@ -18,12 +18,12 @@ OBJETIVO
 
 EL JUEGO
 
-    Los jugadores arrojarán los dados, el que más puntos obtenga iniciará la partida.
+    Los jugadores arrojarán los dados, el que más puntos obtenga iniciará la partida.  # (definir si esto se va a hacer así o por orden)
 
-        · El jugador que inicia la partida ubicará el casillero plástico cerca suyo para poder cerrar
-        las celdas con facilidad pero a la vista de todos.
+        #· El jugador que inicia la partida ubicará el casillero plástico cerca suyo para poder cerrar
+        #las celdas con facilidad pero a la vista de todos.          
 
-        . Comienza abriendo las celdas, luego arroja los 2 dados y procede a cerrar las celdas
+        . Se arrojan los 2 dados *[D]* y procede a cerrar las celdas
         que coincidan con el puntaje obtenido y que considere conveniente.
 
         . Siempre se toma como puntaje la suma de los 2 dados y debe cerrar las celdas que
@@ -51,8 +51,17 @@ EJEMPLO:
     jugadores disputarán una ronda y será ganador aquel al que se le escapen menos
     presos.
 
+INSTRUCCIONES:
+    
+
 ## Otros
 
 - Curso/Facultad
 - Versión de wollok
 - Una vez terminado, no tenemos problemas en que el repositorio sea público / queremos manternerlo privado
+
+
+
+
+## Anotaciones (borrar antes de entregar - no es parte del tp en sí)
+

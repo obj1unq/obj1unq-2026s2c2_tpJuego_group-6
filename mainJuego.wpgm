@@ -1,20 +1,41 @@
 import wollok.game.*
-
-import juego.pepita
+import juego.*
 
 object config {
 
-	method configurarEscenario() {
-		game.title("Pepita")
-		game.height(10)
-		game.width(10)
-	}
+    method configurarEscenario() {
+        game.title("El Preso")
+        game.height(11)
+        game.width(11)
+        game.cellSize(64)
+    }
 }
-program PepitaGame {
 
-	config.configurarEscenario()
+program ElPreso {
+
+    config.configurarEscenario()
+
+	tablero.mostrar()
 	
-	game.addVisualCharacter(pepita)
+	const selector = new Selector(
+		position = game.origin().right(1).up(6)
+	)
 
-	game.start()
+	game.addVisual(selector)
+
+	keyboard.right().onPressDo {
+		selector.moverDerecha()
+	}
+
+	keyboard.left().onPressDo {
+		selector.moverIzquierda()
+	}
+
+	keyboard.space().onPressDo {
+		tablero.alternarCelda(selector.numeroSeleccionado())
+		game.removeVisual(selector)
+   		game.addVisual(selector)
+	}
+
+    game.start()
 }
