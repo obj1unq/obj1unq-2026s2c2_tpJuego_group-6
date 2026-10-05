@@ -1,4 +1,5 @@
 import wollok.game.*
+import direcciones.*
 
 class Celda {
     var property position
@@ -23,6 +24,14 @@ class Celda {
             cerrada = true
             game.addVisual(reja)
         }
+    }
+
+    method LevantarReja() {
+      self.alternarEstado()
+    }
+
+    method esCeldaCerra() {
+      return cerrada
     }
 }
 
@@ -53,6 +62,19 @@ class Selector {
     method numeroSeleccionado() {
         return numero
     }
+
+    //camios que se podria agregar al movimiento?-----------------------------------------
+    method avanzar() {
+        numero = numero + 1
+		position = game.at((game.width() - 2).min(position.x() + 1), position.y()) 
+	}
+
+    method retroceder() {
+        numero = numero - 1
+		position = game.at(1.max(position.x() - 1), position.y()) 
+	}
+    //---------------------------------------------------------------------------------------
+
 
     method moverDerecha() {
         if (numero < 9) {
@@ -87,6 +109,16 @@ object tablero {
 
     method alternarCelda(numero) {
         celdas.get(numero - 1).alternarEstado()
+    }
+
+    method levantasRejas() {
+      if(self.cadaCeldaEstaCerrada()){
+      celdas.forEach({celda => celda.LevantarReja()})
+      }
+    }
+
+    method cadaCeldaEstaCerrada() {
+        return celdas.all({celda => celda.cerrada()}) 
     }
 
 }

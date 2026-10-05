@@ -1,3 +1,4 @@
+import direcciones.*
 import wollok.game.*
 import juego.*
 
@@ -29,9 +30,17 @@ program ElPreso {
 		selector.moverDerecha()
 	}
 
+	
+	//---------------------------------------------------
+	//cambios que se podria agregar?
+	//keyboard.right().onPressDo({selector.avanzar()})
+	//keyboard.left().onPressDo({selector.retroceder()})
+	//---------------------------------------------------
+
 	keyboard.left().onPressDo {
 		selector.moverIzquierda()
 	}
+
 
 	keyboard.space().onPressDo {
 		tablero.alternarCelda(selector.numeroSeleccionado())
@@ -40,6 +49,7 @@ program ElPreso {
 	}
 
 	keyboard.g().onPressDo{dadoAleatorio1.tirarDados()} //agregue esta tecla para probar el dado
+	keyboard.t().onPressDo({tablero.levantasRejas()}) //solo levanta las rejas si todas estan cerradas
 
 
 
