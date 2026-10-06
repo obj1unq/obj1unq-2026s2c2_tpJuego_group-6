@@ -29,6 +29,7 @@ program ElPreso {
 	game.addVisual(selector)
 	game.addVisual(dadoAleatorio1)
 	game.addVisual(jugador1)
+	game.addVisual(dadoAleatorio2)
 
 	keyboard.right().onPressDo {
 		selector.moverDerecha()
@@ -54,6 +55,7 @@ program ElPreso {
 
 	keyboard.g().onPressDo{dadoAleatorio1.tirarDados()} //agregue esta tecla para probar el dado
 	keyboard.t().onPressDo({tablero.levantasRejas()}) //solo levanta las rejas si todas estan cerradas
+	keyboard.g().onPressDo{dadoAleatorio2.tirarDados()}
 
 
 
