@@ -122,18 +122,71 @@ object tablero {
 
 }
 
+
 object dadoAleatorio1 {
     const property position = game.at(9,4)
-    //var numeroDado = 1.randomUpTo(9).truncate(0)
-    const dadosAleatorios = ["dadolado-1.png", "dadolado-2.png", "dadolado-3.png", "dadolado-4.png", "dadolado-5.png", "dadolado-6.png"]
+    //const dadosAleatorios = ["dadolado-1.png", "dadolado-2.png", "dadolado-3.png", "dadolado-4.png", "dadolado-5.png", "dadolado-6.png"]
     var dadoActual = "dadolado-1.png"
 
     method image() {
-      return dadoActual
+      return "dadolado-" + dadoActual + ".png"
     }
 
     method tirarDados() {
-      dadoActual = dadosAleatorios.anyOne()
+      dadoActual = self.dadoAleatorio()
+    }
+
+    method dadoAleatorio() {
+      return 1.randomUpTo(7).truncate(0)
+    }
+
+    method dadoActual() {
+      return dadoActual
+    }
+    
+}
+
+object dadoAleatorio2 {
+    const property position = game.at(6,4)
+    //const dadosAleatorios = ["dadolado-1.png", "dadolado-2.png", "dadolado-3.png", "dadolado-4.png", "dadolado-5.png", "dadolado-6.png"]
+    var dadoActual = "dadolado-1.png"
+    var suma = 0
+
+    method image() {
+      return "dadolado-" + dadoActual + ".png"
+    }
+
+    method tirarDados() {
+      dadoActual = self.dadoAleatorio()
+    }
+
+    method dadoAleatorio() {
+      return 1.randomUpTo(7).truncate(0)
+    }
+
+    method comparacion() {
+         suma = suma + self.dadoActual() + dadoAleatorio1.dadoActual()
+    }
+
+    method dadoActual() {
+      return dadoActual
+    }
+}
+
+object sumaDados {
+  var suma = 0
+  const dado1 = dadoAleatorio1.dadoActual()
+  const dado2 = dadoAleatorio2.dadoActual()
+  
+  method sumaEntreDados() {
+        suma = dado1 + dado2
+        return suma
+    }
+}
+
+object comparacion {
+    method comparacion(numero) {
+      return sumaDados.sumaEntreDados() == numero
     }
 }
 
