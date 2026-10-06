@@ -64,4 +64,25 @@ INSTRUCCIONES:
 
 
 ## Anotaciones (borrar antes de entregar - no es parte del tp en sí)
+## Cosas a resolver (para primer entrega)
+    - Agregar el segundo dado.
+    - Corregir logica del dado para saber que número es el que salio
+    - Sumar y guardar los dados que salieron para poder compararlos.
+    - Crear un turno, por cada turno el jugador puede seleccionar hasta
+        2 casilleros.
+    - Una vez lanzados los dados, no se pueden volver a lanzar 
+    - Al presionar la tecla [P] (por ejemplo), se confirma si la seleccion
+        del jugador corresponde a la suma de los dados. En caso de que esto
+        sea así, se muestra en pantalla y se continúa el siguiente turno.
+    - Ver como mostrar los puntajes de cada jugador. -importante-
+    
+
+
+    Cosas a futuro:
+        - Crear los otros jugadores.
+        - Crear sistema de turnos entre jugadores, no solo los turnos entre 
+            tiradas de dados.
+        - Crear menú de seleccion de:
+            * Cantidad de jugadores.
+            * Puntaje máximo para perder.
 
