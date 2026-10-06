@@ -124,8 +124,9 @@ object tablero {
 
 object dadoAleatorio1 {
     const property position = game.at(9,4)
-    const dadosAleatorios = ["dadolado1.png", "dadolado2.png", "dadolado3.png", "dadolado4.png", "dadolado5.png", "dadolado6.png"]
-    var dadoActual = "dadolado1.png"
+    //var numeroDado = 1.randomUpTo(9).truncate(0)
+    const dadosAleatorios = ["dadolado-1.png", "dadolado-2.png", "dadolado-3.png", "dadolado-4.png", "dadolado-5.png", "dadolado-6.png"]
+    var dadoActual = "dadolado-1.png"
 
     method image() {
       return dadoActual
@@ -134,6 +135,24 @@ object dadoAleatorio1 {
     method tirarDados() {
       dadoActual = dadosAleatorios.anyOne()
     }
+}
+
+class Dado {
+
+}
+
+class Jugador {
+    //var puntaje
+    //var turnos
+    var property position = game.at(0,10)  
+
+    method image() {
+      return "jugador-1.png"
+    }
+
+    method tirarDados() {
+        
+    } 
 }
 
 
