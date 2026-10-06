@@ -1,5 +1,4 @@
 import wollok.game.*
-import direcciones.*
 
 class Celda {
     var property position
@@ -112,9 +111,9 @@ object tablero {
     }
 
     method levantasRejas() {
-      if(self.cadaCeldaEstaCerrada()){
-      celdas.forEach({celda => celda.LevantarReja()})
-      }
+        if(self.cadaCeldaEstaCerrada()){
+            celdas.forEach({celda => celda.LevantarReja()})
+        }
     }
 
     method cadaCeldaEstaCerrada() {
