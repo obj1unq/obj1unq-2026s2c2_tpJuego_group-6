@@ -12,6 +12,8 @@ object config {
     }
 }
 
+
+
 program ElPreso {
 
     config.configurarEscenario()
@@ -22,9 +24,11 @@ program ElPreso {
 		position = game.origin().right(1).up(6)
 	)
 	//const selector = new Selector(position = game.at(1, 6)) no seria mejor este para el de arriba?
+	const jugador1 = new Jugador()
 
 	game.addVisual(selector)
 	game.addVisual(dadoAleatorio1)
+	game.addVisual(jugador1)
 
 	keyboard.right().onPressDo {
 		selector.moverDerecha()
