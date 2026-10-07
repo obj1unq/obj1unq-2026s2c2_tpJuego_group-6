@@ -91,8 +91,9 @@ class Selector {
 }
 
 object tablero {
+    var puedeElegir = false
     const posicionInicial = game.origin().right(1).up(6)
-
+    const celdasElegidas = []
     const celdas = (1..9).map { numero =>
         new Celda(
             position = posicionInicial.right(numero - 1),
@@ -100,105 +101,142 @@ object tablero {
         )
     }
 
-    method mostrar() {
-        celdas.forEach { celda =>
-            celda.mostrar()
+    method habilitarJugada() {
+        self.cancelarSeleccion()
+        puedeElegir = true
+    }
+
+    method elegir(numero, puntaje){
+        if (puedeElegir) {
+            const celda = celdas.get(numero - 1)
+            if(not celda.cerrada() and celdasElegidas.size() < 2){
+                celda.alternarEstado()
+                celdasElegidas.add(celda)
+                self.evaluarElegidas(puntaje)
+            }
         }
     }
+
+    method evaluarElegidas(puntaje){
+        const suma = self.sumaElegidas()
+        if(suma > puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
+            celdasElegidas.forEach({celda => celda.alternarEstado()})
+            celdasElegidas.clear()
+            puedeElegir = false
+        }
+    }
+
+     method confirmarJugada(jugador) {
+        self.validarPuedeConfirmar()
+        jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
+        celdasElegidas.clear()
+        puedeElegir = false
+    }
+    method validarPuedeConfirmar() {
+        if (self.sumaElegidas() != dados.puntaje()) {
+            self.error("La suma de las celdas elegidas no coincide con el puntaje obtenido")
+        }
+    }
+
+    method sumaElegidas(){
+        var suma = 0
+        celdasElegidas.forEach({celda => suma = suma + celda.numero()})
+        return suma
+    }
+    method puedeCerrar(puntaje){
+        const celdasAbiertas = celdas.filter({celda=> not celda.cerrada()}).map({celda=> celda.numero()})
+        return celdasAbiertas.any({celda=> celda == puntaje or 
+                                  celdasAbiertas.any({abierta => celda != abierta and celda + abierta == puntaje})})
+    }
+    method celdasRestantes(){
+        return celdas.filter({celda=> not celda.cerrada()}).sum({celda=>celda.numero()})
+         
+    }
+
+    method mostrar() {
+        celdas.forEach { celda => celda.mostrar()}}
 
     method alternarCelda(numero) {
         celdas.get(numero - 1).alternarEstado()
     }
 
     method levantasRejas() {
-        if(self.cadaCeldaEstaCerrada()){
-            celdas.forEach({celda => celda.LevantarReja()})
-        }
+      if(self.cadaCeldaEstaCerrada()){
+        celdas.forEach({celda => celda.LevantarReja()})
+      }
     }
 
     method cadaCeldaEstaCerrada() {
         return celdas.all({celda => celda.cerrada()}) 
     }
-
+    method cancelarSeleccion() {
+    celdasElegidas.forEach({ celda => celda.alternarEstado() })
+    celdasElegidas.clear()
+}
+    method puedeSeguirTurno(puntaje) {
+        return self.puedeCerrar(puntaje)
 }
 
-
-object dadoAleatorio1 {
-    const property position = game.at(9,4)
-    //const dadosAleatorios = ["dadolado-1.png", "dadolado-2.png", "dadolado-3.png", "dadolado-4.png", "dadolado-5.png", "dadolado-6.png"]
-    var dadoActual = "dadolado-1.png"
-
-    method image() {
-      return "dadolado-" + dadoActual + ".png"
+ /*   method terminarTurno(jugador) {
+        jugador.sumarPuntos(self.celdasRestantes())
+        if (self.cadaCeldaEstaCerrada()) {
+            jugador.restar10()
     }
-
-    method tirarDados() {
-      dadoActual = self.dadoAleatorio()
-    }
-
-    method dadoAleatorio() {
-      return 1.randomUpTo(7).truncate(0)
-    }
-
-    method dadoActual() {
-      return dadoActual
-    }
-    
-}
-
-object dadoAleatorio2 {
-    const property position = game.at(6,4)
-    //const dadosAleatorios = ["dadolado-1.png", "dadolado-2.png", "dadolado-3.png", "dadolado-4.png", "dadolado-5.png", "dadolado-6.png"]
-    var dadoActual = "dadolado-1.png"
-    var suma = 0
-
-    method image() {
-      return "dadolado-" + dadoActual + ".png"
-    }
-
-    method tirarDados() {
-      dadoActual = self.dadoAleatorio()
-    }
-
-    method dadoAleatorio() {
-      return 1.randomUpTo(7).truncate(0)
-    }
-
-    method comparacion() {
-         suma = suma + self.dadoActual() + dadoAleatorio1.dadoActual()
-    }
-
-    method dadoActual() {
-      return dadoActual
-    }
-}
-
-object sumaDados {
-  var suma = 0
-  const dado1 = dadoAleatorio1.dadoActual()
-  const dado2 = dadoAleatorio2.dadoActual()
-  
-  method sumaEntreDados() {
-        suma = dado1 + dado2
-        return suma
-    }
-}
-
-object comparacion {
-    method comparacion(numero) {
-      return sumaDados.sumaEntreDados() == numero
+    self.reiniciarCelda()
+}*/
+    method reiniciarCelda(){
+        celdas.forEach({celda=> if (celda.cerrada()){celda.alternarEstado()}})
     }
 }
 
 class Dado {
+    var property numero = 1
+    const property position
 
+    method image() = "dadolado-" + numero + ".png"
+
+    method tirar() {
+        numero = (1..6).anyOne()
+    }
 }
 
+object dados {
+  const dado1 = new Dado(position = game.at(8,4))
+  const dado2 = new Dado(position = game.at(9,4))
+  method mostrar(){
+    game.addVisual(dado1)
+    game.addVisual(dado2)
+  }
+  method tirar(){
+    dado1.tirar()
+    dado2.tirar()
+  }
+  method puntaje() = dado1.numero() + dado2.numero() 
+}
+class Puntaje{
+    var property position = game.at(0,9)
+    var property jugador
+    method text(){
+        return jugador.puntaje().toString()
+    }
+}
 class Jugador {
-    //var puntaje
+    var puntaje = 0
     //var turnos
+    const property celdasElegidas = []
     var property position = game.at(0,10)  
+    const celdas = #{}
 
+    method sumarPuntos(puntos){
+       // puntaje = puntaje + celdasElegidas.sum({celda=>celda.numero()})
+          puntaje = puntaje + puntos
+    }
+
+    method restar10(){
+        puntaje = (puntaje - 10).max(0)
+    }
+
+    method puntaje()= puntaje
     method image() {
       return "jugador-1.png"
     }
@@ -207,6 +245,3 @@ class Jugador {
         
     } 
 }
-
-
-

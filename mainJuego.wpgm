@@ -1,3 +1,4 @@
+import direcciones.*
 import wollok.game.*
 import juego.*
 
@@ -11,52 +12,50 @@ object config {
     }
 }
 
-
-
 program ElPreso {
 
     config.configurarEscenario()
 
-	tablero.mostrar()
-	
-	const selector = new Selector(
-		position = game.origin().right(1).up(6)
-	)
-	//const selector = new Selector(position = game.at(1, 6)) no seria mejor este para el de arriba?
-	const jugador1 = new Jugador()
+    tablero.mostrar()
 
-	game.addVisual(selector)
-	game.addVisual(dadoAleatorio1)
-	game.addVisual(jugador1)
-	game.addVisual(dadoAleatorio2)
+    const selector = new Selector(position = game.at(1, 6))
+    const jugador1 = new Jugador()
+	const puntaje = new Puntaje(jugador = jugador1)
+    game.addVisual(selector)
+    dados.mostrar()
+    game.addVisual(jugador1)
+	game.addVisual(puntaje)
 
-	keyboard.right().onPressDo {
-		selector.moverDerecha()
-	}
+    keyboard.right().onPressDo {
+        selector.moverDerecha()
+    }
 
-	
-	//---------------------------------------------------
-	//cambios que se podria agregar?
-	//keyboard.right().onPressDo({selector.avanzar()})
-	//keyboard.left().onPressDo({selector.retroceder()})
-	//---------------------------------------------------
+    keyboard.left().onPressDo {
+        selector.moverIzquierda()
+    }
 
-	keyboard.left().onPressDo {
-		selector.moverIzquierda()
-	}
+    keyboard.space().onPressDo {
+        tablero.elegir(selector.numeroSeleccionado(), dados.puntaje())
+        game.removeVisual(selector)
+        game.addVisual(selector)
+    }
 
+    keyboard.g().onPressDo {
+    dados.tirar()
+    tablero.habilitarJugada()
+}
+    keyboard.p().onPressDo {
+    tablero.confirmarJugada(jugador1)
+}
 
-	keyboard.space().onPressDo {
-		tablero.alternarCelda(selector.numeroSeleccionado())
-		game.removeVisual(selector)
-   		game.addVisual(selector)
-	}
+    keyboard.c().onPressDo {
+        tablero.cancelarSeleccion()
+    }
 
-	keyboard.g().onPressDo{dadoAleatorio1.tirarDados()} //agregue esta tecla para probar el dado
-	keyboard.t().onPressDo({tablero.levantasRejas()}) //solo levanta las rejas si todas estan cerradas
-	keyboard.g().onPressDo{dadoAleatorio2.tirarDados()}
-
-
+    keyboard.t().onPressDo {
+        tablero.levantasRejas()
+    }
+    //keyboard.f().onPressDo{tablero.terminarTurno(jugador1)}
 
     game.start()
 }
