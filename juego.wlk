@@ -1,3 +1,5 @@
+
+
 import wollok.game.*
 
 class Celda {
@@ -126,6 +128,12 @@ object tablero {
         }
     }
 
+    //method validarEvaluarElegidas(suma,puntaje) {
+    //  if(suma <= puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
+    //    self.error("no se puede elegir")
+    //  }
+    //}
+
      method confirmarJugada(jugador) {
         self.validarPuedeConfirmar()
         jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
@@ -161,8 +169,13 @@ object tablero {
     }
 
     method levantasRejas() {
-      if(self.cadaCeldaEstaCerrada()){
-        celdas.forEach({celda => celda.LevantarReja()})
+      self.validarSiLasCledasEstanCerradas()
+      celdas.forEach({celda => celda.LevantarReja()})
+    }
+
+    method validarSiLasCledasEstanCerradas() {
+      if(!self.cadaCeldaEstaCerrada()){
+        self.error("no estan cerradas todas las celdas")
       }
     }
 
@@ -228,8 +241,13 @@ class Jugador {
     const celdas = #{}
 
     method sumarPuntos(puntos){
-       // puntaje = puntaje + celdasElegidas.sum({celda=>celda.numero()})
+        if(puntaje < 50){
           puntaje = puntaje + puntos
+        }
+        else {
+            game.say(self, "Gg nt")
+            game.schedule(5000, { game.stop() })
+        }
     }
 
     method restar10(){
@@ -240,8 +258,4 @@ class Jugador {
     method image() {
       return "jugador-1.png"
     }
-
-    method tirarDados() {
-        
-    } 
 }
