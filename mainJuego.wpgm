@@ -1,4 +1,3 @@
-import direcciones.*
 import wollok.game.*
 import juego.*
 
@@ -50,6 +49,7 @@ program ElPreso {
 
     keyboard.c().onPressDo {
         tablero.cancelarSeleccion()
+        tablero.habilitarJugada()
     }
 
     keyboard.t().onPressDo {
