@@ -1,5 +1,3 @@
-
-
 import wollok.game.*
 
 class Celda {
@@ -27,7 +25,7 @@ class Celda {
         }
     }
 
-    method LevantarReja() {
+    method levantarReja() {
       self.alternarEstado()
     }
 
@@ -128,18 +126,19 @@ object tablero {
         }
     }
 
-    //method validarEvaluarElegidas(suma,puntaje) {
-    //  if(suma <= puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
-    //    self.error("no se puede elegir")
-    //  }
-    //}
+    method validarEvaluarElegidas(suma,puntaje) {
+        if(suma <= puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
+            self.error("no se puede elegir")
+        }
+    }
 
-     method confirmarJugada(jugador) {
+    method confirmarJugada(jugador) {
         self.validarPuedeConfirmar()
         jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
         celdasElegidas.clear()
         puedeElegir = false
     }
+    
     method validarPuedeConfirmar() {
         if (self.sumaElegidas() != dados.puntaje()) {
             self.error("La suma de las celdas elegidas no coincide con el puntaje obtenido")
@@ -148,9 +147,10 @@ object tablero {
 
     method sumaElegidas(){
         var suma = 0
-        celdasElegidas.forEach({celda => suma = suma + celda.numero()})
+        celdasElegidas.forEach({celda => suma += celda.numero()})
         return suma
     }
+
     method puedeCerrar(puntaje){
         const celdasAbiertas = celdas.filter({celda=> not celda.cerrada()}).map({celda=> celda.numero()})
         return celdasAbiertas.any({celda=> celda == puntaje or 
@@ -162,41 +162,43 @@ object tablero {
     }
 
     method mostrar() {
-        celdas.forEach { celda => celda.mostrar()}}
+        celdas.forEach({ celda => celda.mostrar() })
+    }
 
     method alternarCelda(numero) {
         celdas.get(numero - 1).alternarEstado()
     }
 
     method levantasRejas() {
-      self.validarSiLasCledasEstanCerradas()
-      celdas.forEach({celda => celda.LevantarReja()})
+      self.validarSiLasCeldasEstanCerradas()
+      celdas.forEach({celda => celda.levantarReja()})
     }
 
-    method validarSiLasCledasEstanCerradas() {
-      if(!self.cadaCeldaEstaCerrada()){
-        self.error("no estan cerradas todas las celdas")
-      }
+    method validarSiLasCeldasEstanCerradas() {
+        if ( !self.cadaCeldaEstaCerrada() ) {
+            self.error("no estan cerradas todas las celdas")
+        }
     }
 
     method cadaCeldaEstaCerrada() {
         return celdas.all({celda => celda.cerrada()}) 
     }
     method cancelarSeleccion() {
-    celdasElegidas.forEach({ celda => celda.alternarEstado() })
-    celdasElegidas.clear()
-}
+        celdasElegidas.forEach({ celda => celda.alternarEstado() })
+        celdasElegidas.clear()
+    }
     method puedeSeguirTurno(puntaje) {
         return self.puedeCerrar(puntaje)
-}
-
- /*   method terminarTurno(jugador) {
-        jugador.sumarPuntos(self.celdasRestantes())
-        if (self.cadaCeldaEstaCerrada()) {
-            jugador.restar10()
     }
-    self.reiniciarCelda()
-}*/
+
+    //  /*   method terminarTurno(jugador) {
+    //     jugador.sumarPuntos(self.celdasRestantes())
+    //     if (self.cadaCeldaEstaCerrada()) {
+    //         jugador.restar10()
+    // }
+    // self.reiniciarCelda()
+    // }
+    // */
     method reiniciarCelda(){
         celdas.forEach({celda=> if (celda.cerrada()){celda.alternarEstado()}})
     }
@@ -209,22 +211,24 @@ class Dado {
     method image() = "dadolado-" + numero + ".png"
 
     method tirar() {
+        // AGREGAR ESTA FUNCION
+        // confirmarPuedeTirar()
         numero = (1..6).anyOne()
     }
 }
 
 object dados {
-  const dado1 = new Dado(position = game.at(8,4))
-  const dado2 = new Dado(position = game.at(9,4))
-  method mostrar(){
-    game.addVisual(dado1)
-    game.addVisual(dado2)
-  }
-  method tirar(){
-    dado1.tirar()
-    dado2.tirar()
-  }
-  method puntaje() = dado1.numero() + dado2.numero() 
+    const dado1 = new Dado(position = game.at(4,4))
+    const dado2 = new Dado(position = game.at(6,4))
+    method mostrar(){
+        game.addVisual(dado1)
+        game.addVisual(dado2)
+    }
+    method tirar(){
+        dado1.tirar()
+        dado2.tirar()
+    }
+    method puntaje() = dado1.numero() + dado2.numero() 
 }
 class Puntaje{
     var property position = game.at(0,9)
@@ -235,10 +239,11 @@ class Puntaje{
 }
 class Jugador {
     var puntaje = 0
+    var totalTablero = 45
     //var turnos
     const property celdasElegidas = []
     var property position = game.at(0,10)  
-    const celdas = #{}
+    //const celdas = #{}
 
     method sumarPuntos(puntos){
         if(puntaje < 50){
@@ -254,7 +259,8 @@ class Jugador {
         puntaje = (puntaje - 10).max(0)
     }
 
-    method puntaje()= puntaje
+    method puntaje() = totalTablero - puntaje
+
     method image() {
       return "jugador-1.png"
     }

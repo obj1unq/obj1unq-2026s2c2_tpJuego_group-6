@@ -1,10 +1,11 @@
 import juego.*
 import mainJuego.config
 
-describe "tests del juego El Preso" {
+// describe "tests del juego El Preso" {
 
-    method initialize() {
-        config.configurarEscenario()
+//     method initialize() {
+//         config.configurarEscenario()
         
-    }
-}
+//     }
+//     equals
+// }
