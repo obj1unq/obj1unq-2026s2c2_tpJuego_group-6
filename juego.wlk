@@ -135,10 +135,17 @@ object tablero {
     //}
 
      method confirmarJugada(jugador) {
-        self.validarPuedeConfirmar()
-        jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
+        self.sumarPuntos(jugador)
         celdasElegidas.clear()
         puedeElegir = false
+    }
+    method sumarPuntos(jugador){
+        const puntajeRestante = self.celdasRestantes()
+        if(celdasElegidas.isEmpty()){
+            jugador.sumarPuntos(puntajeRestante)
+        }else{
+            jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
+        }
     }
     method validarPuedeConfirmar() {
         if (self.sumaElegidas() != dados.puntaje()) {
@@ -151,10 +158,20 @@ object tablero {
         celdasElegidas.forEach({celda => suma = suma + celda.numero()})
         return suma
     }
-    method puedeCerrar(puntaje){
+    method puedeCerrar(puntaje, jugador){
         const celdasAbiertas = celdas.filter({celda=> not celda.cerrada()}).map({celda=> celda.numero()})
         return celdasAbiertas.any({celda=> celda == puntaje or 
                                   celdasAbiertas.any({abierta => celda != abierta and celda + abierta == puntaje})})
+    }
+    method validarCeldas(jugador, puntaje){
+        const puntajeCelda = self.celdasRestantes().sum({celda=> celda.numero()})
+        if(dados.puntaje() < puntajeCelda){
+        jugador.sumarPuntos(puntajeCelda)}
+    }
+    method validarJugada(celdasRestantes, puntaje){
+        if(puntaje < celdasRestantes){
+            self.error("No se puede...")
+        }
     }
     method celdasRestantes(){
         return celdas.filter({celda=> not celda.cerrada()}).sum({celda=>celda.numero()})
@@ -186,8 +203,8 @@ object tablero {
     celdasElegidas.forEach({ celda => celda.alternarEstado() })
     celdasElegidas.clear()
 }
-    method puedeSeguirTurno(puntaje) {
-        return self.puedeCerrar(puntaje)
+    method puedeSeguirTurno() {
+        return dados.puntaje() > self.celdasRestantes()
 }
 
  /*   method terminarTurno(jugador) {
