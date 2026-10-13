@@ -24,7 +24,7 @@ program ElPreso {
     dados.mostrar()
     game.addVisual(jugador1)
 	game.addVisual(puntaje)
-
+ 
     keyboard.right().onPressDo {
         selector.moverDerecha()
     }
