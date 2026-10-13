@@ -1,5 +1,3 @@
-
-
 import wollok.game.*
 
 class Celda {
@@ -102,6 +100,14 @@ object tablero {
             numero = numero
         )
     }
+    
+    method jugador() {
+      return Jugador
+    }
+
+    method dados() {
+      return dados
+    }
 
     method habilitarJugada() {
         self.cancelarSeleccion()
@@ -128,23 +134,42 @@ object tablero {
         }
     }
 
-    //method validarEvaluarElegidas(suma,puntaje) {
-    //  if(suma <= puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
-    //    self.error("no se puede elegir")
-    //  }
+
+    method validarEvaluarElegidas(suma,puntaje) {
+      if(suma <= puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
+        self.error("no se puede elegir")
+      }
+    }
+
+    // method confirmarJugada(jugador) {
+    //    self.validarPuedeConfirmar()
+    //    jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
+    //    celdasElegidas.clear()
+    //    puedeElegir = false
+    //    dados.habilitarJugada()
+    //}
+    //method validarPuedeConfirmar() {
+    //    if (self.sumaElegidas() != dados.puntaje()) {
+    //        self.error("La suma de las celdas elegidas no coincide con el puntaje obtenido")
+    //    }
     //}
 
-     method confirmarJugada(jugador) {
-        self.validarPuedeConfirmar()
-        jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
+        method confirmarJugada(jugador) {
+        //self.validarPuedeConfirmar()
+        self.sumarPuntos(jugador)
         celdasElegidas.clear()
         puedeElegir = false
-    }
-    method validarPuedeConfirmar() {
-        if (self.sumaElegidas() != dados.puntaje()) {
-            self.error("La suma de las celdas elegidas no coincide con el puntaje obtenido")
+        dados.habilitarJugada()
         }
-    }
+
+        method sumarPuntos(jugador){
+        const puntajeRestante = self.celdasRestantes()
+        if(celdasElegidas.isEmpty()){
+            jugador.sumarPuntos(puntajeRestante)
+        }else{
+            jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
+            } 
+        }  
 
     method sumaElegidas(){
         var suma = 0
@@ -190,13 +215,13 @@ object tablero {
         return self.puedeCerrar(puntaje)
 }
 
- /*   method terminarTurno(jugador) {
-        jugador.sumarPuntos(self.celdasRestantes())
-        if (self.cadaCeldaEstaCerrada()) {
-            jugador.restar10()
-    }
-    self.reiniciarCelda()
-}*/
+    ///*   method terminarTurno(jugador) {
+    //    jugador.sumarPuntos(self.celdasRestantes())
+    //    if (self.cadaCeldaEstaCerrada()) {
+    //        jugador.restar10()
+    //}
+    //self.reiniciarCelda()
+    //}*/
     method reiniciarCelda(){
         celdas.forEach({celda=> if (celda.cerrada()){celda.alternarEstado()}})
     }
@@ -216,15 +241,31 @@ class Dado {
 object dados {
   const dado1 = new Dado(position = game.at(8,4))
   const dado2 = new Dado(position = game.at(9,4))
+  var tiradas = true
+
+  method tablero() = tablero
+
   method mostrar(){
     game.addVisual(dado1)
     game.addVisual(dado2)
   }
   method tirar(){
+    self.validarSipuedeTirarDados()
+    tiradas = false
     dado1.tirar()
     dado2.tirar()
   }
   method puntaje() = dado1.numero() + dado2.numero() 
+
+  method validarSipuedeTirarDados() {
+    if(!tiradas) {
+        self.error("no puede tirar mas de una vez el dado")
+    }
+  }
+
+  method habilitarJugada() {
+    tiradas = true
+  }
 }
 class Puntaje{
     var property position = game.at(0,9)
@@ -239,22 +280,23 @@ class Jugador {
     const property celdasElegidas = []
     var property position = game.at(0,10)  
     const celdas = #{}
+    const totalTablero = 45
 
     method sumarPuntos(puntos){
         if(puntaje < 50){
           puntaje = puntaje + puntos
         }
         else {
-            game.say(self, "Gg nt")
-            game.schedule(5000, { game.stop() })
-        }
+            game.say(self, "Gg nt")               //INNECESARIO DEL MOMENTO
+            game.schedule(5000, { game.stop() })  //
+        }                                         //   
     }
 
     method restar10(){
         puntaje = (puntaje - 10).max(0)
     }
 
-    method puntaje()= puntaje
+    method puntaje()= totalTablero - puntaje
     method image() {
       return "jugador-1.png"
     }
