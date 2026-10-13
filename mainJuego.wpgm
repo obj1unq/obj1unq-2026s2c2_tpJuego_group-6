@@ -40,12 +40,13 @@ program ElPreso {
     }
 
     keyboard.g().onPressDo {
-    dados.tirar()
-    tablero.habilitarJugada()
-}
+        dados.tirar()
+        tablero.habilitarJugada()
+    }
+    
     keyboard.p().onPressDo {
-    tablero.confirmarJugada(jugador1)
-}
+        tablero.confirmarJugada(jugador1)
+    }
 
     keyboard.c().onPressDo {
         tablero.cancelarSeleccion()

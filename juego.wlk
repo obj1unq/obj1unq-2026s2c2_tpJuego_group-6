@@ -138,9 +138,9 @@ object tablero {
 
 
     method validarEvaluarElegidas(suma,puntaje) {
-      if(suma <= puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
-        self.error("no se puede elegir")
-      }
+        if(suma <= puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
+            self.error("no se puede elegir")
+        }
     }
 
     // method confirmarJugada(jugador) {
@@ -156,40 +156,42 @@ object tablero {
        }
     }
 
-        method confirmarJugada(jugador) {
-            self.validarPuedeConfirmar()
-            self.sumarPuntos(jugador)
-            celdasElegidas.clear()
-            puedeElegir = false
-            dados.habilitarJugada()
-        }
+    method confirmarJugada(jugador) {
+        self.validarPuedeConfirmar()
+        self.sumarPuntos(jugador)
+        celdasElegidas.clear()
+        puedeElegir = false
+        dados.habilitarJugada()
+    }
 
-        method sumarPuntos(jugador){
-        const puntajeRestante = self.celdasRestantes()
+    method sumarPuntos(jugador){
+    const puntajeRestante = self.celdasRestantes()
         if(celdasElegidas.isEmpty()){
             jugador.sumarPuntos(puntajeRestante)
-        }else{
+        } else {
             jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
-            } 
-        }  
+        } 
+    }  
 
     method sumaElegidas(){
         var suma = 0
         celdasElegidas.forEach({celda => suma = suma + celda.numero()})
         return suma
     }
+
     method puedeCerrar(puntaje){
         const celdasAbiertas = celdas.filter({celda=> not celda.cerrada()}).map({celda=> celda.numero()})
         return celdasAbiertas.any({celda=> celda == puntaje or 
                                   celdasAbiertas.any({abierta => celda != abierta and celda + abierta == puntaje})})
     }
+
     method celdasRestantes(){
         return celdas.filter({celda=> not celda.cerrada()}).sum({celda=>celda.numero()})
-         
     }
 
     method mostrar() {
-        celdas.forEach { celda => celda.mostrar()}}
+        celdas.forEach { celda => celda.mostrar()}
+    }
 
     method alternarCelda(numero) {
         celdas.get(numero - 1).alternarEstado()
@@ -201,21 +203,23 @@ object tablero {
     }
 
     method validarSiLasCledasEstanCerradas() {
-      if(!self.cadaCeldaEstaCerrada()){
-        self.error("no estan cerradas todas las celdas")
-      }
+        if(!self.cadaCeldaEstaCerrada()){
+            self.error("no estan cerradas todas las celdas")
+        } 
     }
 
     method cadaCeldaEstaCerrada() {
         return celdas.all({celda => celda.cerrada()}) 
     }
+
     method cancelarSeleccion() {
-    celdasElegidas.forEach({ celda => celda.alternarEstado() })
-    celdasElegidas.clear()
-}
+        celdasElegidas.forEach({ celda => celda.alternarEstado() })
+        celdasElegidas.clear()
+    }
+
     method puedeSeguirTurno(puntaje) {
         return self.puedeCerrar(puntaje)
-}
+    }
 
     ///*   method terminarTurno(jugador) {
     //    jugador.sumarPuntos(self.celdasRestantes())
@@ -241,33 +245,35 @@ class Dado {
 }
 
 object dados {
-  const dado1 = new Dado(position = game.at(8,4))
-  const dado2 = new Dado(position = game.at(9,4))
-  var tiradas = true
+    const dado1 = new Dado(position = game.at(8,4))
+    const dado2 = new Dado(position = game.at(9,4))
+    var tiradas = true
 
-  method tablero() = tablero
+    method tablero() = tablero
 
-  method mostrar(){
-    game.addVisual(dado1)
-    game.addVisual(dado2)
-  }
-  method tirar(){
-    self.validarSipuedeTirarDados()
-    tiradas = false
-    dado1.tirar()
-    dado2.tirar()
-  }
-  method puntaje() = dado1.numero() + dado2.numero() 
-
-  method validarSipuedeTirarDados() {
-    if(!tiradas) {
-        self.error("no puede tirar mas de una vez el dado")
+    method mostrar(){
+        game.addVisual(dado1)
+        game.addVisual(dado2)
     }
-  }
 
-  method habilitarJugada() {
-    tiradas = true
-  }
+    method tirar(){
+        self.validarSipuedeTirarDados()
+        tiradas = false
+        dado1.tirar()
+        dado2.tirar()
+    }
+
+    method puntaje() = dado1.numero() + dado2.numero() 
+
+    method validarSipuedeTirarDados() {
+        if(!tiradas) {
+            self.error("no puede tirar mas de una vez el dado")
+        }
+    }
+
+    method habilitarJugada() {
+        tiradas = true
+    }
 }
 class Puntaje{
     var property position = game.at(0,9)
@@ -286,7 +292,7 @@ class Jugador {
 
     method sumarPuntos(puntos){
         if(puntaje < 50){
-          puntaje = puntaje + puntos
+            puntaje = puntaje + puntos
         }
         else {
             game.say(self, "Gg nt")               //INNECESARIO DEL MOMENTO
@@ -299,7 +305,8 @@ class Jugador {
     }
 
     method puntaje()= totalTablero - puntaje
+
     method image() {
-      return "jugador-1.png"
+        return "jugador-1.png"
     }
 }
