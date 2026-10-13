@@ -131,7 +131,9 @@ object tablero {
             celdasElegidas.forEach({celda => celda.alternarEstado()})
             celdasElegidas.clear()
             puedeElegir = false
-        }
+        } else if (celdasElegidas.size() == 2 and suma < puntaje){
+            println("asdasd")
+        }                  
     }
 
 
@@ -147,19 +149,19 @@ object tablero {
     //    celdasElegidas.clear()
     //    puedeElegir = false
     //    dados.habilitarJugada()
-    //}
-    //method validarPuedeConfirmar() {
-    //    if (self.sumaElegidas() != dados.puntaje()) {
-    //        self.error("La suma de las celdas elegidas no coincide con el puntaje obtenido")
-    //    }
-    //}
+    // }
+    method validarPuedeConfirmar() {
+       if (self.sumaElegidas() != dados.puntaje()) {
+           self.error("La suma de las celdas elegidas no coincide con el puntaje obtenido")
+       }
+    }
 
         method confirmarJugada(jugador) {
-        //self.validarPuedeConfirmar()
-        self.sumarPuntos(jugador)
-        celdasElegidas.clear()
-        puedeElegir = false
-        dados.habilitarJugada()
+            self.validarPuedeConfirmar()
+            self.sumarPuntos(jugador)
+            celdasElegidas.clear()
+            puedeElegir = false
+            dados.habilitarJugada()
         }
 
         method sumarPuntos(jugador){
@@ -194,7 +196,7 @@ object tablero {
     }
 
     method levantasRejas() {
-      self.validarSiLasCledasEstanCerradas()
+    //   self.validarSiLasCledasEstanCerradas()
       celdas.forEach({celda => celda.LevantarReja()})
     }
 

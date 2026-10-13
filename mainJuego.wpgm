@@ -52,9 +52,9 @@ program ElPreso {
         tablero.habilitarJugada()
     }
 
-    keyboard.t().onPressDo {
-        tablero.levantasRejas()
-    }
+    // keyboard.t().onPressDo {
+    //     tablero.levantasRejas()
+    // }
     //keyboard.f().onPressDo{tablero.terminarTurno(jugador1)}
 
     game.start()
