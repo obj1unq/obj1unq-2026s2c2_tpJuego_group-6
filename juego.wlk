@@ -27,7 +27,7 @@ class Celda {
     //}
 
     method alternarEstado() {
-        estado = estado.alternarEstado(reja)
+        estado = estado.alternarEstado()
         estado.mostrar(reja)
     }
 
@@ -67,19 +67,6 @@ class Selector {
     method numeroSeleccionado() {
         return numero
     }
-
-    //camios que se podria agregar al movimiento?-----------------------------------------
-    method avanzar() {
-        numero = numero + 1
-		position = game.at((game.width() - 2).min(position.x() + 1), position.y()) 
-	}
-
-    method retroceder() {
-        numero = numero - 1
-		position = game.at(1.max(position.x() - 1), position.y()) 
-	}
-    //---------------------------------------------------------------------------------------
-
 
     method moverDerecha() {
         if (numero < 9) {
