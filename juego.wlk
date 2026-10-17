@@ -1,9 +1,10 @@
 import wollok.game.*
+import object.*
 
 class Celda {
     var property position
     var property numero
-    var property cerrada = false
+    var property estado = celdaAbierta
     const reja = new Reja(position = position)
 
     method image() {
@@ -15,22 +16,27 @@ class Celda {
         game.addVisual(self)
     }
 
+    //method alternarEstado() {
+    //    if (cerrada) {
+    //        cerrada = false
+    //        game.removeVisual(reja)
+    //    } else {
+    //        cerrada = true
+    //        game.addVisual(reja)
+    //    }
+    //}
+
     method alternarEstado() {
-        if (cerrada) {
-            cerrada = false
-            game.removeVisual(reja)
-        } else {
-            cerrada = true
-            game.addVisual(reja)
-        }
+        estado = estado.alternarEstado(reja)
+        estado.mostrar(reja)
+    }
+
+    method tieneReja() {
+      return estado.tieneReja()
     }
 
     method LevantarReja() {
       self.alternarEstado()
-    }
-
-    method esCeldaCerra() {
-      return cerrada
     }
 }
 
@@ -117,7 +123,7 @@ object tablero {
     method elegir(numero, puntaje){
         if (puedeElegir) {
             const celda = celdas.get(numero - 1)
-            if(not celda.cerrada() and celdasElegidas.size() < 2){
+            if(not celda.tieneReja() and celdasElegidas.size() < 2){
                 celda.alternarEstado()
                 celdasElegidas.add(celda)
                 self.evaluarElegidas(puntaje)
@@ -131,9 +137,7 @@ object tablero {
             celdasElegidas.forEach({celda => celda.alternarEstado()})
             celdasElegidas.clear()
             puedeElegir = false
-        } else if (celdasElegidas.size() == 2 and suma < puntaje){
-            println("asdasd")
-        }                  
+        }               
     }
 
 
@@ -186,7 +190,7 @@ object tablero {
     }
 
     method celdasRestantes(){
-        return celdas.filter({celda=> not celda.cerrada()}).sum({celda=>celda.numero()})
+        return celdas.filter({celda=> not celda.tieneReja()}).sum({celda=>celda.numero()})
     }
 
     method mostrar() {

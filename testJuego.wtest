@@ -1,5 +1,6 @@
 import juego.*
 import mainJuego.config
+import object.*
 
 describe "tests del juego El Preso" {
 
@@ -7,4 +8,10 @@ describe "tests del juego El Preso" {
         config.configurarEscenario()
         
     }
+}
+
+test "prueba" {
+    const celda1 = new Celda(position = 1, numero = 1)
+    assert.equals(celdaCerrada, celda1.alternarEstado())
+    
 }
