@@ -1,4 +1,6 @@
 import wollok.game.*
+import elementos.*
+import jugadores.*
 
 class Celda {
     var property position
@@ -50,46 +52,6 @@ class Reja {
     }
 }
 
-class Selector {
-    var property position = game.origin().right(1).up(6)
-    var property numero = 1
-
-    method image() {
-        return "selector-rojo.png"
-    }
-
-    method numeroSeleccionado() {
-        return numero
-    }
-
-    //camios que se podria agregar al movimiento?-----------------------------------------
-    method avanzar() {
-        numero = numero + 1
-		position = game.at((game.width() - 2).min(position.x() + 1), position.y()) 
-	}
-
-    method retroceder() {
-        numero = numero - 1
-		position = game.at(1.max(position.x() - 1), position.y()) 
-	}
-    //---------------------------------------------------------------------------------------
-
-
-    method moverDerecha() {
-        if (numero < 9) {
-            numero = numero + 1
-            position = position.right(1)
-        }
-    }
-
-    method moverIzquierda() {
-        if (numero > 1) {
-            numero = numero - 1
-            position = position.left(1)
-        }
-    }
-}
-
 object tablero {
     var puedeElegir = false
     const posicionInicial = game.origin().right(1).up(6)
@@ -132,7 +94,7 @@ object tablero {
             celdasElegidas.clear()
             puedeElegir = false
         } else if (celdasElegidas.size() == 2 and suma < puntaje){
-            println("asdasd")
+            console.println("asdasd")
         }                  
     }
 
@@ -150,6 +112,7 @@ object tablero {
     //    puedeElegir = false
     //    dados.habilitarJugada()
     // }
+
     method validarPuedeConfirmar() {
        if (self.sumaElegidas() != dados.puntaje()) {
            self.error("La suma de las celdas elegidas no coincide con el puntaje obtenido")
@@ -230,83 +193,5 @@ object tablero {
     //}*/
     method reiniciarCelda(){
         celdas.forEach({celda=> if (celda.cerrada()){celda.alternarEstado()}})
-    }
-}
-
-class Dado {
-    var property numero = 1
-    const property position
-
-    method image() = "dadolado-" + numero + ".png"
-
-    method tirar() {
-        numero = (1..6).anyOne()
-    }
-}
-
-object dados {
-    const dado1 = new Dado(position = game.at(8,4))
-    const dado2 = new Dado(position = game.at(9,4))
-    var tiradas = true
-
-    method tablero() = tablero
-
-    method mostrar(){
-        game.addVisual(dado1)
-        game.addVisual(dado2)
-    }
-
-    method tirar(){
-        self.validarSipuedeTirarDados()
-        tiradas = false
-        dado1.tirar()
-        dado2.tirar()
-    }
-
-    method puntaje() = dado1.numero() + dado2.numero() 
-
-    method validarSipuedeTirarDados() {
-        if(!tiradas) {
-            self.error("no puede tirar mas de una vez el dado")
-        }
-    }
-
-    method habilitarJugada() {
-        tiradas = true
-    }
-}
-class Puntaje{
-    var property position = game.at(0,9)
-    var property jugador
-    method text(){
-        return jugador.puntaje().toString()
-    }
-}
-class Jugador {
-    var puntaje = 0
-    //var turnos
-    const property celdasElegidas = []
-    var property position = game.at(0,10)  
-    const celdas = #{}
-    const totalTablero = 45
-
-    method sumarPuntos(puntos){
-        if(puntaje < 50){
-            puntaje = puntaje + puntos
-        }
-        else {
-            game.say(self, "Gg nt")               //INNECESARIO DEL MOMENTO
-            game.schedule(5000, { game.stop() })  //
-        }                                         //   
-    }
-
-    method restar10(){
-        puntaje = (puntaje - 10).max(0)
-    }
-
-    method puntaje()= totalTablero - puntaje
-
-    method image() {
-        return "jugador-1.png"
     }
 }

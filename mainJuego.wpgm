@@ -1,5 +1,8 @@
 import wollok.game.*
-import juego.*
+import jugadores.*
+import elementos.*
+import tablero.*
+import configuracion.*
 
 object config {
 
