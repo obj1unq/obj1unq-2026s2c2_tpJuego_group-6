@@ -8,9 +8,7 @@ class Celda {
     var property cerrada = false
     const reja = new Reja(position = position)
 
-    method image() {
-        return "numero-" + numero + ".png"
-    }
+    method image() = "numero-" + numero + ".png"
 
     method mostrar() {
         game.addVisual(new BordeCelda(position = position))
@@ -31,31 +29,26 @@ class Celda {
       self.alternarEstado()
     }
 
-    method esCeldaCerra() {
-      return cerrada
-    }
+    method esCeldaCerra() = cerrada
 }
 
 class BordeCelda {
     var property position
 
-    method image() {
-        return "borde-negro.png"
-    }
+    method image() = "borde-negro.png"
 }
 
 class Reja {
     var property position 
 
-    method image(){
-        return "reja-cerrada.png"
-    }
+    method image() = "reja-cerrada.png"
 }
 
 object tablero {
     var puedeElegir = false
     const posicionInicial = game.origin().right(1).up(6)
     const celdasElegidas = []
+
     const celdas = (1..9).map { numero =>
         new Celda(
             position = posicionInicial.right(numero - 1),
@@ -83,6 +76,9 @@ object tablero {
                 celda.alternarEstado()
                 celdasElegidas.add(celda)
                 self.evaluarElegidas(puntaje)
+
+                game.removeVisual(selector)         //CAMBIAR
+                game.addVisual(selector)            //CAMBIAR
             }
         }
     }

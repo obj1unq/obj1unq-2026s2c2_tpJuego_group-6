@@ -33,7 +33,7 @@ object dados {
 
     method validarSipuedeTirarDados() {
         if(!tiradas) {
-            self.error("no puede tirar mas de una vez el dado")
+            self.error("No puede tirar mas de una vez el dado")
         }
     }
 
@@ -42,17 +42,13 @@ object dados {
     }
 }
 
-class Selector {
+object selector {
     var property position = game.origin().right(1).up(6)
     var property numero = 1
 
-    method image() {
-        return "selector-rojo.png"
-    }
+    method image() = "selector-rojo.png"
 
-    method numeroSeleccionado() {
-        return numero
-    }
+    method numeroSeleccionado() = numero
 
 // == Movimiento ==
     method moverDerecha() {
@@ -79,3 +75,4 @@ class Selector {
         }
     }
 }
+

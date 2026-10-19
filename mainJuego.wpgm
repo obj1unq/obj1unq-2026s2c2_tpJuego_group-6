@@ -18,48 +18,72 @@ program ElPreso {
 
     config.configurarEscenario()
 
-    tablero.mostrar()
+    // tablero.mostrar()
 
-    const selector = new Selector(position = game.at(1, 6))
-    const jugador1 = new Jugador()
-	const puntaje = new Puntaje(jugador = jugador1)
-    game.addVisual(selector)
-    dados.mostrar()
-    game.addVisual(jugador1)
-	game.addVisual(puntaje)
+    game.addVisual(pantallaInicioVisual)
 
+    // const jugador1 = new Jugador()
+	// const puntaje = new Puntaje(jugador = jugador1)
+    // dados.mostrar()
+    // game.addVisual(jugador1)
+	// game.addVisual(puntaje)
+
+    // Controles de menús
+    keyboard.enter().onPressDo {
+        if (juego.estado() != "JUGANDO") juego.avanzarEstado()
+    }
+
+    keyboard.up().onPressDo {
+        if (juego.estado() == "SELECCION_JUGADORES") juego.incrementarJugadores()
+        else if (juego.estado() == "SELECCION_PUNTAJE") juego.siguientePuntaje()
+    }
+
+    keyboard.down().onPressDo {
+        if (juego.estado() == "SELECCION_JUGADORES") juego.decrementarJugadores()
+        else if (juego.estado() == "SELECCION_PUNTAJE") juego.anteriorPuntaje()
+    }
+
+   // Controles dentro del juego
     keyboard.right().onPressDo {
-        selector.moverDerecha()
+        if (juego.estado() == "JUGANDO") selector.moverDerecha()
     }
 
     keyboard.left().onPressDo {
-        selector.moverIzquierda()
+        if (juego.estado() == "JUGANDO") selector.moverIzquierda()
     }
 
     keyboard.space().onPressDo {
-        tablero.elegir(selector.numeroSeleccionado(), dados.puntaje())
-        game.removeVisual(selector)
-        game.addVisual(selector)
+        if (juego.estado() == "JUGANDO") {
+            tablero.elegir(selector.numeroSeleccionado(), dados.puntaje())
+        }
     }
 
     keyboard.g().onPressDo {
-        dados.tirar()
-        tablero.habilitarJugada()
+        if (juego.estado() == "JUGANDO") {
+            dados.tirar()
+            tablero.habilitarJugada()
+        }
     }
-    
+
     keyboard.p().onPressDo {
-        tablero.confirmarJugada(jugador1)
+        if (juego.estado() == "JUGANDO") {
+            tablero.confirmarJugada(juego.jugadorActual())
+            juego.pasarTurno()
+        }
     }
 
     keyboard.c().onPressDo {
-        tablero.cancelarSeleccion()
-        tablero.habilitarJugada()
+        if (juego.estado() == "JUGANDO") {
+            tablero.cancelarSeleccion()
+            tablero.habilitarJugada()
+        }
     }
 
-    // keyboard.t().onPressDo {
-    //     tablero.levantasRejas()
-    // }
-    //keyboard.f().onPressDo{tablero.terminarTurno(jugador1)}
+    keyboard.t().onPressDo {
+        if (juego.estado() == "JUGANDO") {
+            tablero.levantasRejas()
+        }
+    }
 
     game.start()
 }

@@ -2,15 +2,16 @@ import wollok.game.*
 
 class Jugador {
     var puntaje = 0
+    var property limitePuntaje = 50 
     //var turnos
     const property celdasElegidas = []
-    var property position = game.at(0,10)  
-    const celdas = #{}
+    var property position  
+    var property numero  
     const totalTablero = 45
 
     method sumarPuntos(puntos){
-        if(puntaje < 50){
-            puntaje = puntaje + puntos
+        if(puntaje < limitePuntaje){
+            puntaje += puntos
         }
         else {
             game.say(self, "Gg nt")               //INNECESARIO DEL MOMENTO
@@ -22,17 +23,15 @@ class Jugador {
         puntaje = (puntaje - 10).max(0)
     }
 
-    method puntaje()= totalTablero - puntaje
+    method puntaje()= totalTablero - puntaje        //Cambiar esto, hacer recorrido por celdas abiertas para saber cual fue el puntaje final de esa ronda
 
-    method image() {
-        return "jugador-1.png"
-    }
+    method image() = "jugador-" + numero + ".png"
 }
 
 class Puntaje{
-    var property position = game.at(0,9)
     var property jugador
-    method text(){
-        return jugador.puntaje().toString()
-    }
+    method position() = jugador.position().down(1)
+
+
+    method text() = "Pts: " + jugador.puntaje().toString()
 }
