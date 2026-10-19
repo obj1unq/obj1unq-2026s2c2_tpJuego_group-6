@@ -5,7 +5,7 @@ import jugadores.*
 class Celda {
     var property position
     var property numero
-    var property cerrada = false
+    var property estado = celdaAbierta
     const reja = new Reja(position = position)
 
     method image() = "numero-" + numero + ".png"
@@ -16,20 +16,15 @@ class Celda {
     }
 
     method alternarEstado() {
-        if (cerrada) {
-            cerrada = false
-            game.removeVisual(reja)
-        } else {
-            cerrada = true
-            game.addVisual(reja)
-        }
+        estado = estado.alternarEstado()
+        estado.mostrar(reja)
     }
 
     method LevantarReja() {
       self.alternarEstado()
     }
 
-    method esCeldaCerra() = cerrada
+    method esCeldaCerrada() = estado.tieneReja()
 }
 
 class BordeCelda {
@@ -72,7 +67,7 @@ object tablero {
     method elegir(numero, puntaje){
         if (puedeElegir) {
             const celda = celdas.get(numero - 1)
-            if(not celda.cerrada() and celdasElegidas.size() < 2){
+            if(not celda.esCeldaCerrada() and celdasElegidas.size() < 2){
                 celda.alternarEstado()
                 celdasElegidas.add(celda)
                 self.evaluarElegidas(puntaje)
@@ -145,7 +140,7 @@ object tablero {
     }
 
     method celdasRestantes(){
-        return celdas.filter({celda=> not celda.cerrada()}).sum({celda=>celda.numero()})
+        return celdas.filter({celda=> not celda.esCeldaCerrada()}).sum({celda=>celda.numero()})
     }
 
     method mostrar() {
