@@ -1,7 +1,7 @@
 import juego.*
 
 object celdaCerrada {
-    method alternarEstado(reja) {
+    method alternarEstado() {
       return celdaAbierta
     }
 
@@ -17,7 +17,7 @@ object celdaCerrada {
 }
 
 object celdaAbierta {
-    method alternarEstado(reja) {
+    method alternarEstado() {
       return celdaCerrada
     }
 
