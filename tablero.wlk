@@ -29,7 +29,7 @@ class Celda {
       self.alternarEstado()
     }
 
-    method esCeldaCerra() = cerrada
+    method esCeldaCerrada() = cerrada
 }
 
 class BordeCelda {
@@ -62,6 +62,25 @@ object tablero {
 
     method dados() {
       return dados
+    }
+
+    method hayUnaCeldaPosible() {
+      return celdas.any({celda => not celda.esCeldaCerrada() and celda.numero() == dados.puntaje()})
+    }
+
+    method hayDosCeldasPosible() {
+      const celdasAbiertas = celdas.filter({celda => not celda.esCeldaCerrada()})
+      return celdasAbiertas.any({celda1 => 
+      celdasAbiertas.any({celda2 => celda1 != celda2 and 
+      celda1.numero() + celda2.numero() == dados.puntaje()})})
+    }
+
+    method deshabilitarJugada() {
+      puedeElegir = false
+    }
+
+    method hayJugadaPosible() {
+      return self.hayUnaCeldaPosible() or self.hayDosCeldasPosible()
     }
 
     method habilitarJugada() {

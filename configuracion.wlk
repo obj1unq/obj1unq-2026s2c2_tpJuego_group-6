@@ -84,6 +84,13 @@ object juego {
     method pasarTurno() {
         indiceTurno = (indiceTurno + 1) % jugadores.size()
     }
+
+    method pasarTurnoSinJugada() {
+      tablero.sumarPuntos(self.jugadorActual())
+      tablero.deshabilitarJugada()
+      dados.habilitarJugada()
+      self.pasarTurno()
+    }
 }
 
 object pantallaInicioVisual {
