@@ -62,6 +62,9 @@ program ElPreso {
         if (juego.estado() == "JUGANDO") {
             dados.tirar()
             tablero.habilitarJugada()
+            if(not tablero.hayJugadaPosible()){
+                juego.pasarTurnoSinJugada()
+            }
         }
     }
 
