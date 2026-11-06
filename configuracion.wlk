@@ -85,11 +85,28 @@ object juego {
         indiceTurno = (indiceTurno + 1) % jugadores.size()
     }
 
-    method pasarTurnoSinJugada() {
-      tablero.sumarPuntos(self.jugadorActual())
-      tablero.deshabilitarJugada()
-      dados.habilitarJugada()
-      self.pasarTurno()
+    method pasarTurnoSinJugada2() { //COMPARAR SI HACE LO MISMO VISUALMENTE CON EL JUGADA3 LINEA 97
+      if(not tablero.hayJugadaPosible()){
+        tablero.sumarPuntos(self.jugadorActual())
+        tablero.deshabilitarJugada()
+        dados.habilitarJugada()
+        self.pasarTurno()
+      }
+    }
+
+    //jugada3
+    method pasarTurnoSinJugada3() { 
+        self.validarNoHayJugadaPosible()
+        tablero.sumarPuntos(self.jugadorActual())
+        tablero.deshabilitarJugada()
+        dados.habilitarJugada()
+        self.pasarTurno()
+    }
+
+    method validarNoHayJugadaPosible() {
+      if (tablero.hayJugadaPosible()) {
+        self.error("Todavia hay una jugada posible")
+      }
     }
 }
 

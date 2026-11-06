@@ -5,7 +5,7 @@ import jugadores.*
 class Celda {
     var property position
     var property numero
-    var property cerrada = false
+    var property estado = celdaAbierta
     const reja = new Reja(position = position)
 
     method image() = "numero-" + numero + ".png"
@@ -16,20 +16,15 @@ class Celda {
     }
 
     method alternarEstado() {
-        if (cerrada) {
-            cerrada = false
-            game.removeVisual(reja)
-        } else {
-            cerrada = true
-            game.addVisual(reja)
-        }
+        estado = estado.alternarEstado()
+        estado.mostrar(reja)
     }
 
     method LevantarReja() {
       self.alternarEstado()
     }
 
-    method esCeldaCerrada() = cerrada
+    method esCeldaCerrada() = estado.tieneReja()
 }
 
 class BordeCelda {
@@ -65,14 +60,18 @@ object tablero {
     }
 
     method hayUnaCeldaPosible() {
+      //entre las celdas abiertas, chequea si hay al menos una que cumpla con el puntaje de los dados actual
       return celdas.any({celda => not celda.esCeldaCerrada() and celda.numero() == dados.puntaje()})
     }
 
     method hayDosCeldasPosible() {
-      const celdasAbiertas = celdas.filter({celda => not celda.esCeldaCerrada()})
-      return celdasAbiertas.any({celda1 => 
-      celdasAbiertas.any({celda2 => celda1 != celda2 and 
-      celda1.numero() + celda2.numero() == dados.puntaje()})})
+      //busca las dos celdas posibles que de la suma de esas dos celdas, de el puntaje de los dados actual
+      return self.celdasAbiertas().any({celda1 => self.celdasAbiertas().any({celda2 => celda1 != celda2 and 
+                                        celda1.numero() + celda2.numero() == dados.puntaje()})})
+    }
+
+    method celdasAbiertas() {
+      return celdas.filter({celda => not celda.esCeldaCerrada()})
     }
 
     method deshabilitarJugada() {
@@ -91,7 +90,7 @@ object tablero {
     method elegir(numero, puntaje){
         if (puedeElegir) {
             const celda = celdas.get(numero - 1)
-            if(not celda.cerrada() and celdasElegidas.size() < 2){
+            if(not celda.esCeldaCerrada() and celdasElegidas.size() < 2){
                 celda.alternarEstado()
                 celdasElegidas.add(celda)
                 self.evaluarElegidas(puntaje)
@@ -102,15 +101,22 @@ object tablero {
         }
     }
 
+
     method evaluarElegidas(puntaje){
         const suma = self.sumaElegidas()
         if(suma > puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
             celdasElegidas.forEach({celda => celda.alternarEstado()})
             celdasElegidas.clear()
             puedeElegir = false
-        } else if (celdasElegidas.size() == 2 and suma < puntaje){
-            console.println("asdasd")
-        }                  
+        }                
+    }
+
+    method evaluarElegidas2(puntaje){
+        const suma = self.sumaElegidas()
+        self.validarEvaluarElegidas(suma,puntaje) //revisar porque con la validacion tapa el borde rojo de la celda
+        celdasElegidas.forEach({celda => celda.alternarEstado()})
+        celdasElegidas.clear()
+        puedeElegir = false              
     }
 
 
@@ -119,14 +125,6 @@ object tablero {
             self.error("no se puede elegir")
         }
     }
-
-    // method confirmarJugada(jugador) {
-    //    self.validarPuedeConfirmar()
-    //    jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
-    //    celdasElegidas.clear()
-    //    puedeElegir = false
-    //    dados.habilitarJugada()
-    // }
 
     method validarPuedeConfirmar() {
        if (self.sumaElegidas() != dados.puntaje()) {
@@ -164,7 +162,7 @@ object tablero {
     }
 
     method celdasRestantes(){
-        return celdas.filter({celda=> not celda.cerrada()}).sum({celda=>celda.numero()})
+        return celdas.filter({celda=> not celda.esCeldaCerrada()}).sum({celda=>celda.numero()})
     }
 
     method mostrar() {
@@ -176,7 +174,7 @@ object tablero {
     }
 
     method levantasRejas() {
-    //   self.validarSiLasCledasEstanCerradas()
+      self.validarSiLasCledasEstanCerradas()
       celdas.forEach({celda => celda.LevantarReja()})
     }
 
@@ -187,7 +185,7 @@ object tablero {
     }
 
     method cadaCeldaEstaCerrada() {
-        return celdas.all({celda => celda.cerrada()}) 
+        return celdas.all({celda => celda.esCeldaCerrada()}) 
     }
 
     method cancelarSeleccion() {
