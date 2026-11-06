@@ -171,7 +171,7 @@ object tablero {
     }
 
     method levantasRejas() {
-    //   self.validarSiLasCledasEstanCerradas()
+      self.validarSiLasCledasEstanCerradas()
       celdas.forEach({celda => celda.LevantarReja()})
     }
 
@@ -182,7 +182,7 @@ object tablero {
     }
 
     method cadaCeldaEstaCerrada() {
-        return celdas.all({celda => celda.cerrada()}) 
+        return celdas.all({celda => celda.esCeldaCerrada()}) 
     }
 
     method cancelarSeleccion() {

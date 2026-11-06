@@ -91,6 +91,21 @@ object juego {
       dados.habilitarJugada()
       self.pasarTurno()
     }
+
+    method pasarTurnoSinJugada2() {
+      if(not tablero.hayJugadaPosible()){
+        tablero.sumarPuntos(self.jugadorActual())
+        tablero.deshabilitarJugada()
+        dados.habilitarJugada()
+        self.pasarTurno()
+      }
+    }
+
+    method validarSiHayJugadaPosible() {
+      if(tablero.hayJugadaPosible()){
+        self.error("no hay jugada posible")
+      }
+    }
 }
 
 object pantallaInicioVisual {
