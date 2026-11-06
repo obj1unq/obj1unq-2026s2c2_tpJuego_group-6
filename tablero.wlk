@@ -60,14 +60,18 @@ object tablero {
     }
 
     method hayUnaCeldaPosible() {
+      //entre las celdas abiertas, chequea si hay al menos una que cumpla con el puntaje de los dados actual
       return celdas.any({celda => not celda.esCeldaCerrada() and celda.numero() == dados.puntaje()})
     }
 
     method hayDosCeldasPosible() {
-      const celdasAbiertas = celdas.filter({celda => not celda.esCeldaCerrada()})
-      return celdasAbiertas.any({celda1 => 
-      celdasAbiertas.any({celda2 => celda1 != celda2 and 
-      celda1.numero() + celda2.numero() == dados.puntaje()})})
+      //busca las dos celdas posibles que de la suma de esas dos celdas, de el puntaje de los dados actual
+      return self.celdasAbiertas().any({celda1 => self.celdasAbiertas().any({celda2 => celda1 != celda2 and 
+                                        celda1.numero() + celda2.numero() == dados.puntaje()})})
+    }
+
+    method celdasAbiertas() {
+      return celdas.filter({celda => not celda.esCeldaCerrada()})
     }
 
     method deshabilitarJugada() {
@@ -97,15 +101,22 @@ object tablero {
         }
     }
 
+
     method evaluarElegidas(puntaje){
         const suma = self.sumaElegidas()
         if(suma > puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
             celdasElegidas.forEach({celda => celda.alternarEstado()})
             celdasElegidas.clear()
             puedeElegir = false
-        } else if (celdasElegidas.size() == 2 and suma < puntaje){
-            console.println("asdasd")
-        }                  
+        }                
+    }
+
+    method evaluarElegidas2(puntaje){
+        const suma = self.sumaElegidas()
+        self.validarEvaluarElegidas(suma,puntaje) //revisar porque con la validacion tapa el borde rojo de la celda
+        celdasElegidas.forEach({celda => celda.alternarEstado()})
+        celdasElegidas.clear()
+        puedeElegir = false              
     }
 
 
@@ -114,14 +125,6 @@ object tablero {
             self.error("no se puede elegir")
         }
     }
-
-    // method confirmarJugada(jugador) {
-    //    self.validarPuedeConfirmar()
-    //    jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
-    //    celdasElegidas.clear()
-    //    puedeElegir = false
-    //    dados.habilitarJugada()
-    // }
 
     method validarPuedeConfirmar() {
        if (self.sumaElegidas() != dados.puntaje()) {

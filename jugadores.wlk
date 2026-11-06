@@ -12,11 +12,7 @@ class Jugador {
     method sumarPuntos(puntos){
         if(puntaje < limitePuntaje){
             puntaje += puntos
-        }
-        else {
-            game.say(self, "Gg nt")               //INNECESARIO DEL MOMENTO
-            game.schedule(5000, { game.stop() })  //
-        }                                         //   
+        }   
     }
 
     method restar10(){
