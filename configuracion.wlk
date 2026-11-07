@@ -138,7 +138,7 @@ object juego {
         indiceTurno = (indiceTurno + 1) % jugadores.size()
     }
 
-    method pasarTurnoSinJugada2() { //COMPARAR SI HACE LO MISMO VISUALMENTE CON EL JUGADA3 LINEA 97
+    method pasarTurnoSinJugada2() { //COMPARAR SI HACE LO MISMO VISUALMENTE CON JUGADA3 LINEA 97
       if(not tablero.hayJugadaPosible()){
         tablero.sumarPuntos(self.jugadorActual())
         tablero.deshabilitarJugada()
