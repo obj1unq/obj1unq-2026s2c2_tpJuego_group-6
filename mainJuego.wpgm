@@ -103,6 +103,7 @@ program ElPreso {
     //         tablero.levantasRejas()
     //     }
     // }
+    keyboard.t().onPressDo({juego.alterarRejasCeldas()})
 
     game.start()
 }

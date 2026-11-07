@@ -93,7 +93,7 @@ object tablero {
             if(not celda.esCeldaCerrada() and celdasElegidas.size() < 2){
                 celda.alternarEstado()
                 celdasElegidas.add(celda)
-                self.evaluarElegidas(puntaje)
+                self.evaluarElegidas2(puntaje)
 
                 game.removeVisual(selector)         //CAMBIAR
                 game.addVisual(selector)            //CAMBIAR
@@ -113,6 +113,8 @@ object tablero {
 
     method evaluarElegidas2(puntaje){
         const suma = self.sumaElegidas()
+        game.removeVisual(selector)         //CAMBIAR
+        game.addVisual(selector)            //CAMBIAR
         self.validarEvaluarElegidas(suma,puntaje) //revisar porque con la validacion tapa el borde rojo de la celda
         celdasElegidas.forEach({celda => celda.alternarEstado()})
         celdasElegidas.clear()
@@ -150,9 +152,7 @@ object tablero {
     }  
 
     method sumaElegidas(){
-        var suma = 0
-        celdasElegidas.forEach({celda => suma = suma + celda.numero()})
-        return suma
+        return celdasElegidas.sum({celda => celda.numero()})
     }
 
     method puedeCerrar(puntaje){

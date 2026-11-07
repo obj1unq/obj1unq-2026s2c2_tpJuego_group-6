@@ -34,10 +34,10 @@ object juego {
     //     }
     // }
 
-    method pasarMenu(){
+    method pasarMenu(){ //corregir?¿
         if (!juegoIniciado){
             juegoIniciado = true
-            self.avanzarEstado2() //corregir
+            self.avanzarEstado2() 
         } else {
             self.avanzarEstado2()
         }
@@ -141,6 +141,14 @@ object juego {
     method cancelarJugada() {
         tablero.cancelarSeleccion()
         tablero.habilitarJugada()
+    }
+
+    method alterarRejasCeldas() {
+        estado2.levantarRejas(self)
+    }
+
+    method levantarRejas() {
+        tablero.levantasRejas()
     }
 
     method comenzarPartidaReal() {
@@ -313,5 +321,9 @@ object jugando {
 
     method presionarC(juego1) {
         juego1.cancelarJugada()
+    }
+
+    method levantarRejas(juego1) {
+        juego1.levantarRejas()
     }
 }
