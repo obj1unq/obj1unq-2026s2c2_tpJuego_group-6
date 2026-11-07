@@ -5,7 +5,7 @@ import elementos.*
 
 object juego {
     //var estado = "INICIO" // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
-    var estado2 = inicio
+    var estado = inicio
     
     const property jugadores = []
     var indiceTurno = 0
@@ -16,23 +16,9 @@ object juego {
     var indicePuntaje = 0
     var juegoIniciado = false
 
-    method estado() = estado2
+    method estado() = estado
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
-
-    // method avanzarEstado() {
-    //     if (estado == "INICIO") {
-    //         estado = "SELECCION_JUGADORES"
-    //         game.removeVisual(pantallaInicioVisual)
-    //         game.addVisual(menuJugadoresVisual)
-    //     } else if (estado == "SELECCION_JUGADORES") {
-    //         estado = "SELECCION_PUNTAJE"
-    //         game.removeVisual(menuJugadoresVisual)
-    //         game.addVisual(menuPuntajeVisual)
-    //     } else if (estado == "SELECCION_PUNTAJE") {
-    //         self.comenzarPartidaReal()
-    //     }
-    // }
 
     method pasarMenu(){ //corregir?¿
         if (!juegoIniciado){
@@ -44,50 +30,24 @@ object juego {
     }
 
     method avanzarEstado2() {
-        estado2 = estado2.siguienteEstado()
+        estado = estado.siguienteEstado()
     }
-
-    // method incrementarJugadores() {
-    //     if (estado == "SELECCION_JUGADORES" and cantidadJugadoresSeleccionada < 4) {
-    //         cantidadJugadoresSeleccionada = cantidadJugadoresSeleccionada + 1
-    //     }
-    // }
 
     method incrementarJugadores2() {
-        cantidadJugadoresSeleccionada = estado2.incrementarJugadores(cantidadJugadoresSeleccionada)
+        cantidadJugadoresSeleccionada = estado.incrementarJugadores(cantidadJugadoresSeleccionada)
     }
-
-    // method decrementarJugadores() {
-    //     if (estado == "SELECCION_JUGADORES" and cantidadJugadoresSeleccionada > 2) {
-    //         cantidadJugadoresSeleccionada = cantidadJugadoresSeleccionada - 1
-    //     }
-    // }
 
     method decrementarJugadores2() {
-        cantidadJugadoresSeleccionada = estado2.decrementarJugadores(cantidadJugadoresSeleccionada)
+        cantidadJugadoresSeleccionada = estado.decrementarJugadores(cantidadJugadoresSeleccionada)
     }
 
-    // method siguientePuntaje() {
-    //     if (estado == "SELECCION_PUNTAJE") {
-    //         indicePuntaje = (indicePuntaje + 1) % puntajesDisponibles.size()
-    //         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
-    //     }
-    // }
-
     method siguientePuntaje2() {
-        indicePuntaje = estado2.siguientePuntaje(indicePuntaje,puntajesDisponibles)
+        indicePuntaje = estado.siguientePuntaje(indicePuntaje,puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
     }
 
-    // method anteriorPuntaje() {
-    //     if (estado == "SELECCION_PUNTAJE") {
-    //         indicePuntaje = (indicePuntaje - 1 + puntajesDisponibles.size()) % puntajesDisponibles.size()
-    //         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
-    //     }
-    // }
-
     method anteriorPuntaje2() {
-        indicePuntaje = estado2.anteriorPuntaje(indicePuntaje,puntajesDisponibles)
+        indicePuntaje = estado.anteriorPuntaje(indicePuntaje,puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
     }
 
@@ -100,15 +60,15 @@ object juego {
     }
 
     method presionarArriba() {
-        estado2.presionarArriba(self)
+        estado.presionarArriba(self)
     }
 
     method presionarAbajo() {
-        estado2.presionarAbajo(self)
+        estado.presionarAbajo(self)
     }
 
     method presionarEspacio(selectorActual) {
-        estado2.presionarEspacio(self, selectorActual)
+        estado.presionarEspacio(self, selectorActual)
     }
 
     method elegirCelda(selectorActual) {
@@ -116,7 +76,7 @@ object juego {
     }
 
     method presionarG() {
-        estado2.presionarG(self)
+        estado.presionarG(self)
     }
 
     method tirarDados() {
@@ -126,7 +86,7 @@ object juego {
     }
 
     method presionarP() {
-        estado2.presionarP(self)
+        estado.presionarP(self)
     }
 
     method confirmarJugada() {
@@ -135,7 +95,7 @@ object juego {
     }
 
     method presionarC() {
-        estado2.presionarC(self)
+        estado.presionarC(self)
     }
 
     method cancelarJugada() {
@@ -144,7 +104,7 @@ object juego {
     }
 
     method alterarRejasCeldas() {
-        estado2.levantarRejas(self)
+        estado.levantarRejas(self)
     }
 
     method levantarRejas() {
@@ -165,7 +125,7 @@ object juego {
             game.addVisual(new Puntaje(jugador = j)) // Muestra su puntaje abajo
         }
         
-        estado2 = jugando
+        estado = jugando
         tablero.mostrar()
         dados.mostrar()
         game.addVisual(selector)
