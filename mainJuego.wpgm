@@ -28,63 +28,19 @@ program ElPreso {
     // game.addVisual(jugador1)
 	// game.addVisual(puntaje)
 
-    // Controles de menús
-    keyboard.enter().onPressDo {
-        if (juego.estado() != "JUGANDO") juego.avanzarEstado()
-    }
-
-    keyboard.up().onPressDo {
-        if (juego.estado() == "SELECCION_JUGADORES") juego.incrementarJugadores()
-        else if (juego.estado() == "SELECCION_PUNTAJE") juego.siguientePuntaje()
-    }
-
-    keyboard.down().onPressDo {
-        if (juego.estado() == "SELECCION_JUGADORES") juego.decrementarJugadores()
-        else if (juego.estado() == "SELECCION_PUNTAJE") juego.anteriorPuntaje()
-    }
+    // Controles de menú
+    keyboard.enter().onPressDo({juego.pasarMenu()})
+    keyboard.up().onPressDo({juego.presionarArriba()})
+    keyboard.down().onPressDo({juego.presionarAbajo()})
 
    // Controles dentro del juego
-    keyboard.right().onPressDo {
-        if (juego.estado() == "JUGANDO") selector.moverDerecha()
-    }
-
-    keyboard.left().onPressDo {
-        if (juego.estado() == "JUGANDO") selector.moverIzquierda()
-    }
-
-    keyboard.space().onPressDo {
-        if (juego.estado() == "JUGANDO") {
-            tablero.elegir(selector.numeroSeleccionado(), dados.puntaje())
-        }
-    }
-
-    keyboard.g().onPressDo {
-        if (juego.estado() == "JUGANDO") {
-            dados.tirar()
-            tablero.habilitarJugada()
-            juego.pasarTurnoSinJugada2()
-        }
-    }
-
-    keyboard.p().onPressDo {
-        if (juego.estado() == "JUGANDO") {
-            tablero.confirmarJugada(juego.jugadorActual())
-            juego.pasarTurno()
-        }
-    }
-
-    keyboard.c().onPressDo {
-        if (juego.estado() == "JUGANDO") {
-            tablero.cancelarSeleccion()
-            tablero.habilitarJugada()
-        }
-    }
-
-    keyboard.t().onPressDo {
-        if (juego.estado() == "JUGANDO") {
-            tablero.levantasRejas()
-        }
-    }
+    keyboard.right().onPressDo({juego.moverDerecha(selector)})
+    keyboard.left().onPressDo({juego.moverIzquierda(selector)})
+    keyboard.space().onPressDo({juego.presionarEspacio(selector)})
+    keyboard.g().onPressDo({juego.presionarG()})
+    keyboard.p().onPressDo({juego.presionarP()})
+    keyboard.c().onPressDo({juego.presionarC()})
+    keyboard.t().onPressDo({juego.alterarRejasCeldas()})
 
     game.start()
 }

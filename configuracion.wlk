@@ -4,7 +4,8 @@ import tablero.*
 import elementos.*
 
 object juego {
-    var estado = "INICIO" // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
+    //var estado = "INICIO" // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
+    var estado = inicio
     
     const property jugadores = []
     var indiceTurno = 0
@@ -13,49 +14,101 @@ object juego {
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
+    var juegoIniciado = false
 
     method estado() = estado
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
 
-    method avanzarEstado() {
-        if (estado == "INICIO") {
-            estado = "SELECCION_JUGADORES"
-            game.removeVisual(pantallaInicioVisual)
-            game.addVisual(menuJugadoresVisual)
-        } else if (estado == "SELECCION_JUGADORES") {
-            estado = "SELECCION_PUNTAJE"
-            game.removeVisual(menuJugadoresVisual)
-            game.addVisual(menuPuntajeVisual)
-        } else if (estado == "SELECCION_PUNTAJE") {
-            self.comenzarPartidaReal()
+    method pasarMenu(){ //corregir?¿
+        if (!juegoIniciado){
+            juegoIniciado = true
+            self.avanzarEstado2() 
+        } else {
+            self.avanzarEstado2()
         }
     }
 
-    method incrementarJugadores() {
-        if (estado == "SELECCION_JUGADORES" and cantidadJugadoresSeleccionada < 4) {
-            cantidadJugadoresSeleccionada = cantidadJugadoresSeleccionada + 1
-        }
+    method avanzarEstado2() {
+        estado = estado.siguienteEstado()
     }
 
-    method decrementarJugadores() {
-        if (estado == "SELECCION_JUGADORES" and cantidadJugadoresSeleccionada > 2) {
-            cantidadJugadoresSeleccionada = cantidadJugadoresSeleccionada - 1
-        }
+    method incrementarJugadores2() {
+        cantidadJugadoresSeleccionada = estado.incrementarJugadores(cantidadJugadoresSeleccionada)
     }
 
-    method siguientePuntaje() {
-        if (estado == "SELECCION_PUNTAJE") {
-            indicePuntaje = (indicePuntaje + 1) % puntajesDisponibles.size()
-            puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
-        }
+    method decrementarJugadores2() {
+        cantidadJugadoresSeleccionada = estado.decrementarJugadores(cantidadJugadoresSeleccionada)
     }
 
-    method anteriorPuntaje() {
-        if (estado == "SELECCION_PUNTAJE") {
-            indicePuntaje = (indicePuntaje - 1 + puntajesDisponibles.size()) % puntajesDisponibles.size()
-            puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
-        }
+    method siguientePuntaje2() {
+        indicePuntaje = estado.siguientePuntaje(indicePuntaje,puntajesDisponibles)
+        puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
+    }
+
+    method anteriorPuntaje2() {
+        indicePuntaje = estado.anteriorPuntaje(indicePuntaje,puntajesDisponibles)
+        puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
+    }
+
+    method moverDerecha(selector) {
+        selector.moverDerecha()
+    }
+
+    method moverIzquierda(selector) {
+        selector.moverIzquierda()
+    }
+
+    method presionarArriba() {
+        estado.presionarArriba(self)
+    }
+
+    method presionarAbajo() {
+        estado.presionarAbajo(self)
+    }
+
+    method presionarEspacio(selectorActual) {
+        estado.presionarEspacio(self, selectorActual)
+    }
+
+    method elegirCelda(selectorActual) {
+        tablero.elegir(selectorActual.numeroSeleccionado(), dados.puntaje())
+    }
+
+    method presionarG() {
+        estado.presionarG(self)
+    }
+
+    method tirarDados() {
+        dados.tirar()
+        tablero.habilitarJugada()
+        self.pasarTurnoSinJugada2()
+    }
+
+    method presionarP() {
+        estado.presionarP(self)
+    }
+
+    method confirmarJugada() {
+        tablero.confirmarJugada(self.jugadorActual())
+        self.pasarTurno()
+    }
+
+    method presionarC() {
+        estado.presionarC(self)
+    }
+
+    method cancelarJugada() {
+        tablero.cancelarSeleccion()
+        tablero.habilitarJugada()
+    }
+
+    method alterarRejasCeldas() {
+        estado.levantarRejas(self)
+    }
+
+    method levantarRejas() {
+        tablero.levantasRejas()
     }
 
     method comenzarPartidaReal() {
@@ -72,7 +125,7 @@ object juego {
             game.addVisual(new Puntaje(jugador = j)) // Muestra su puntaje abajo
         }
         
-        estado = "JUGANDO"
+        estado = jugando
         tablero.mostrar()
         dados.mostrar()
         game.addVisual(selector)
@@ -85,7 +138,7 @@ object juego {
         indiceTurno = (indiceTurno + 1) % jugadores.size()
     }
 
-    method pasarTurnoSinJugada2() { //COMPARAR SI HACE LO MISMO VISUALMENTE CON EL JUGADA3 LINEA 97
+    method pasarTurnoSinJugada2() { //COMPARAR SI HACE LO MISMO VISUALMENTE CON JUGADA3 LINEA 97
       if(not tablero.hayJugadaPosible()){
         tablero.sumarPuntos(self.jugadorActual())
         tablero.deshabilitarJugada()
@@ -134,4 +187,103 @@ object indicadorTurno {
         return juego.jugadorActual().position().up(1)
     }
     method image() = "indicador-turno.png"
+}
+
+object inicio {
+    method siguienteEstado() {
+        game.removeVisual(pantallaInicioVisual)
+        game.addVisual(menuJugadoresVisual)
+        return seleccionJugadores
+    }
+
+    method presionarEspacio(juego1, selectorActual){}//no hace nada
+
+    method presionarG(juego1) {} //no hace nada
+    method presionarP(juego1){}//no hace nada
+    method presionarC(juego1){} //no hace nada
+}
+
+object seleccionJugadores {
+    method siguienteEstado() {
+        game.removeVisual(menuJugadoresVisual)
+        game.addVisual(menuPuntajeVisual)
+        return seleccionPuntaje
+    }
+
+    method incrementarJugadores(cantJugadores) {
+        return if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
+    }
+
+    method decrementarJugadores(cantJugadores) {
+      return if (cantJugadores > 2) cantJugadores - 1 else cantJugadores
+    }
+
+    method presionarArriba(juego1) {
+        juego1.incrementarJugadores2()
+    }
+
+    method presionarAbajo(juego1) {
+        juego1.decrementarJugadores2()
+    }
+
+    method presionarEspacio(juego1, selectorActual){} //no hace nada
+    method presionarG(juego1) {} //no hace nada
+    method presionarP(juego1){}//no hace nada
+    method presionarC(juego1){} //no hace nada
+}
+
+object seleccionPuntaje {
+    const partida = juego
+    method siguienteEstado() {
+        partida.comenzarPartidaReal()
+        return jugando
+    }
+
+    method siguientePuntaje(indiceP,puntajeD) {
+        return (indiceP + 1) % puntajeD.size()
+    }
+
+    method anteriorPuntaje(indiceP,puntajeD) {
+        return (indiceP - 1 + puntajeD.size()) % puntajeD.size()
+    }
+
+    method presionarArriba(juego1) {
+        juego1.siguientePuntaje2()
+    }
+
+    method presionarAbajo(juego1) {
+        juego1.siguientePuntaje2()
+    }
+
+    method presionarEspacio(juego1, selectorActual){} //no hace nada
+    method presionarG(juego1) {} //no hace nada
+    method presionarP(juego1){}//no hace nada
+    method presionarC(juego1){} //no hace nada
+}
+
+object jugando {
+    
+    method siguienteEstado() {
+      return self
+    }
+
+    method presionarEspacio(juego1, selectorActual) {
+        juego1.elegirCelda(selectorActual)
+    }
+
+    method presionarG(juego1) {
+        juego1.tirarDados()
+    }
+
+    method presionarP(juego1) {
+        juego1.confirmarJugada()
+    }
+
+    method presionarC(juego1) {
+        juego1.cancelarJugada()
+    }
+
+    method levantarRejas(juego1) {
+        juego1.levantarRejas()
+    }
 }
