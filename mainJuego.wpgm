@@ -1,20 +1,46 @@
 import wollok.game.*
-
-import juego.pepita
+import jugadores.*
+import elementos.*
+import tablero.*
+import configuracion.*
 
 object config {
 
-	method configurarEscenario() {
-		game.title("Pepita")
-		game.height(10)
-		game.width(10)
-	}
+    method configurarEscenario() {
+        game.title("El Preso")
+        game.height(11)
+        game.width(11)
+        game.cellSize(64)
+    }
 }
-program PepitaGame {
 
-	config.configurarEscenario()
-	
-	game.addVisualCharacter(pepita)
+program ElPreso {
 
-	game.start()
+    config.configurarEscenario()
+
+    // tablero.mostrar()
+
+    game.addVisual(pantallaInicioVisual)
+
+    // const jugador1 = new Jugador()
+	// const puntaje = new Puntaje(jugador = jugador1)
+    // dados.mostrar()
+    // game.addVisual(jugador1)
+	// game.addVisual(puntaje)
+
+    // Controles de menú
+    keyboard.enter().onPressDo({juego.pasarMenu()})
+    keyboard.up().onPressDo({juego.presionarArriba()})
+    keyboard.down().onPressDo({juego.presionarAbajo()})
+
+   // Controles dentro del juego
+    keyboard.right().onPressDo({juego.moverDerecha(selector)})
+    keyboard.left().onPressDo({juego.moverIzquierda(selector)})
+    keyboard.space().onPressDo({juego.presionarEspacio(selector)})
+    keyboard.g().onPressDo({juego.presionarG()})
+    keyboard.p().onPressDo({juego.presionarP()})
+    keyboard.c().onPressDo({juego.presionarC()})
+    keyboard.t().onPressDo({juego.alterarRejasCeldas()})
+
+    game.start()
 }
