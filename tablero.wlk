@@ -87,39 +87,61 @@ class Tablero {
     }
 
     method habilitarJugada() {
-        self.cancelarSeleccion()
+        //self.cancelarSeleccion() //porque este cancelarSeleccion esta aca?
         puedeElegir = true
     }
 
-    method elegir(numero, puntaje){
-        if (puedeElegir) {
-            const celda = celdas.get(numero - 1)
-            if(not celda.esCeldaCerrada() and celdasElegidas.size() < 2){
-                celda.alternarEstado()
-                celdasElegidas.add(celda)
-                self.evaluarElegidas2(puntaje)
+    // method elegir(numero, puntaje){
+    //     if (puedeElegir) {
+    //         const celda = celdas.get(numero - 1)
+    //         if(not celda.esCeldaCerrada() and celdasElegidas.size() < 2){
+    //             celda.alternarEstado()
+    //             celdasElegidas.add(celda)
+    //             self.evaluarElegidas2(puntaje)
 
-                game.removeVisual(selector)         //CAMBIAR
-                game.addVisual(selector)            //CAMBIAR
-            }
+    //             game.removeVisual(selector)         //CAMBIAR
+    //             game.addVisual(selector)            //CAMBIAR
+    //         }
+    //     }
+    // }
+
+    method elegir2(numeroC, puntaje){
+        const celda = celdas.get(numeroC - 1)
+        self.validarPuedeElegir(celda)
+        celda.alternarEstado()
+        self.agregarCeldaElegida(celda)
+        self.evaluarElegidas2(puntaje)
+        self.mostrarVisualSelector(selector) //CAMBIAR
+    }
+
+    method mostrarVisualSelector(selector) {
+        game.removeVisual(selector)         
+        game.addVisual(selector)            
+    }
+
+    method validarPuedeElegir(celda) {
+        if(not puedeElegir and celda.esCeldaCerrada() or celdasElegidas.size() >= 2){
+            self.error("no puede elegir la celda")
         }
     }
 
-
-    method evaluarElegidas(puntaje){
-        const suma = self.sumaElegidas()
-        if(suma > puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
-            celdasElegidas.forEach({celda => celda.alternarEstado()})
-            celdasElegidas.clear()
-            puedeElegir = false
-        }                
+    method agregarCeldaElegida(celda) {
+      celdasElegidas.add(celda)
     }
 
+
+    // method evaluarElegidas(puntaje){
+    //     const suma = self.sumaElegidas()
+    //     if(suma > puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
+    //         celdasElegidas.forEach({celda => celda.alternarEstado()})
+    //         celdasElegidas.clear()
+    //         puedeElegir = false
+    //     }                
+    // }
+
     method evaluarElegidas2(puntaje){
-        const suma = self.sumaElegidas()
-        game.removeVisual(selector)         //CAMBIAR
-        game.addVisual(selector)            //CAMBIAR
-        self.validarEvaluarElegidas(suma,puntaje) //revisar porque con la validacion tapa el borde rojo de la celda
+        self.mostrarVisualSelector(selector) //CAMBIAR
+        self.validarEvaluarElegidas(self.sumaElegidas(),puntaje) //revisar porque con la validacion tapa el borde rojo de la celda
         celdasElegidas.forEach({celda => celda.alternarEstado()})
         celdasElegidas.clear()
         puedeElegir = false              
@@ -177,7 +199,7 @@ class Tablero {
         celdas.get(numero - 1).alternarEstado()
     }
 
-    method levantasRejas() {
+    method levantarRejas() {
       self.validarSiLasCledasEstanCerradas()
       celdas.forEach({celda => celda.LevantarReja()})
     }

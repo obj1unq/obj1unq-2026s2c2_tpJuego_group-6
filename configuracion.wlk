@@ -73,7 +73,7 @@ object juego {
     }
 
     method elegirCelda(selectorActual) {
-        self.tableroActual().elegir(selectorActual.numeroSeleccionado(), dados.puntaje())
+        self.tableroActual().elegir2(selectorActual.numeroSeleccionado(), dados.puntaje())
     }
 
     method presionarG() {
@@ -109,7 +109,15 @@ object juego {
     }
 
     method levantarRejas() {
-        self.tableroActual().levantasRejas()
+        self.validarSiPuedenLevantarRejas()
+        tableros.forEach({tableroT => tableroT.levantarRejas()})
+    }
+
+    method validarSiPuedenLevantarRejas() {
+        const estanCerradas = tableros.all({tableroT => tableroT.cadaCeldaEstaCerrada()})
+        if(!estanCerradas){
+            self.error("todos los tableros no tienen sus celdas cerradas")
+        }
     }
 
     method comenzarPartidaReal() {
