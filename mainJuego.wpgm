@@ -8,8 +8,8 @@ object config {
 
     method configurarEscenario() {
         game.title("El Preso")
-        game.height(11)
-        game.width(11)
+        game.height(16)
+        game.width(22)
         game.cellSize(64)
     }
 }

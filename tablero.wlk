@@ -39,9 +39,9 @@ class Reja {
     method image() = "reja-cerrada.png"
 }
 
-object tablero {
+class Tablero {
     var puedeElegir = false
-    const posicionInicial = game.origin().right(1).up(6)
+    const posicionInicial  //game.origin().right(1).up(6)
     const celdasElegidas = []
 
     const celdas = (1..9).map { numero =>
@@ -57,6 +57,10 @@ object tablero {
 
     method dados() {
       return dados
+    }
+
+    method posicionSelector(numeroS) {
+      return celdas.get(numeroS - 1).position()
     }
 
     method hayUnaCeldaPosible() {

@@ -8,6 +8,7 @@ object juego {
     var estado = inicio
     
     const property jugadores = []
+    const property tableros = []
     var indiceTurno = 0
     
     var cantidadJugadoresSeleccionada = 2
@@ -72,7 +73,7 @@ object juego {
     }
 
     method elegirCelda(selectorActual) {
-        tablero.elegir(selectorActual.numeroSeleccionado(), dados.puntaje())
+        self.tableroActual().elegir(selectorActual.numeroSeleccionado(), dados.puntaje())
     }
 
     method presionarG() {
@@ -81,7 +82,7 @@ object juego {
 
     method tirarDados() {
         dados.tirar()
-        tablero.habilitarJugada()
+        self.tableroActual().habilitarJugada()
         self.pasarTurnoSinJugada2()
     }
 
@@ -90,7 +91,7 @@ object juego {
     }
 
     method confirmarJugada() {
-        tablero.confirmarJugada(self.jugadorActual())
+        self.tableroActual().confirmarJugada(self.jugadorActual())
         self.pasarTurno()
     }
 
@@ -99,8 +100,8 @@ object juego {
     }
 
     method cancelarJugada() {
-        tablero.cancelarSeleccion()
-        tablero.habilitarJugada()
+        self.tableroActual().cancelarSeleccion()
+        self.tableroActual().habilitarJugada()
     }
 
     method alterarRejasCeldas() {
@@ -108,40 +109,52 @@ object juego {
     }
 
     method levantarRejas() {
-        tablero.levantasRejas()
+        self.tableroActual().levantasRejas()
     }
 
     method comenzarPartidaReal() {
         game.removeVisual(menuPuntajeVisual)
-        
-        const posicionesDisponibles = [game.at(1, 2), game.at(3, 2), game.at(5, 2), game.at(7, 2)]
+
+        const posicionesDisponiblesTableros = [game.at(1,6), game.at(12,6), game.at(1,12), game.at(12,12)]
+        const posicionesDisponibles = [game.at(1, 2), game.at(12, 2), game.at(1, 9), game.at(12, 9)]
     
         (1..cantidadJugadoresSeleccionada).forEach { i =>
             const pos = posicionesDisponibles.get(i - 1)
-            const j = new Jugador(numero = i, position = pos, limitePuntaje = puntajeLimiteSeleccionado)
+            const post = posicionesDisponiblesTableros.get(i - 1)
+            const t = new Tablero(posicionInicial = post)
+            const j = new Jugador(numero = i, position = pos, limitePuntaje = puntajeLimiteSeleccionado, tablero = t)
         
             jugadores.add(j)
+            tableros.add(t)
             game.addVisual(j) // Muestra el sprite del jugador
+            t.mostrar()
             game.addVisual(new Puntaje(jugador = j)) // Muestra su puntaje abajo
         }
         
         estado = jugando
-        tablero.mostrar()
+        //tablero.mostrar()
         dados.mostrar()
         game.addVisual(selector)
         game.addVisual(indicadorTurno)
     }
 
+    method tableroActual() = self.jugadorActual().tablero()
+
     method jugadorActual() = jugadores.get(indiceTurno)
 
     method pasarTurno() {
         indiceTurno = (indiceTurno + 1) % jugadores.size()
+        self.reacomoDarSelector()
+    }
+
+    method reacomoDarSelector() {
+      selector.position(self.tableroActual().posicionSelector(selector.numeroSeleccionado()))//CORREGIR
     }
 
     method pasarTurnoSinJugada2() { //COMPARAR SI HACE LO MISMO VISUALMENTE CON JUGADA3 LINEA 97
-      if(not tablero.hayJugadaPosible()){
-        tablero.sumarPuntos(self.jugadorActual())
-        tablero.deshabilitarJugada()
+      if(not self.tableroActual().hayJugadaPosible()){
+        self.tableroActual().sumarPuntos(self.jugadorActual())
+        self.tableroActual().deshabilitarJugada()
         dados.habilitarJugada()
         self.pasarTurno()
       }
@@ -150,14 +163,14 @@ object juego {
     //jugada3
     method pasarTurnoSinJugada3() { 
         self.validarNoHayJugadaPosible()
-        tablero.sumarPuntos(self.jugadorActual())
-        tablero.deshabilitarJugada()
+        self.tableroActual().sumarPuntos(self.jugadorActual())
+        self.tableroActual().deshabilitarJugada()
         dados.habilitarJugada()
         self.pasarTurno()
     }
 
     method validarNoHayJugadaPosible() {
-      if (tablero.hayJugadaPosible()) {
+      if (self.tableroActual().hayJugadaPosible()) {
         self.error("Todavia hay una jugada posible")
       }
     }
@@ -285,5 +298,13 @@ object jugando {
 
     method levantarRejas(juego1) {
         juego1.levantarRejas()
+    }
+
+    method presionarArriba(juego1) {
+        //no hace nada
+    }
+
+    method presionarAbajo(juego1) {
+        //no hace nada
     }
 }

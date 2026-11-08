@@ -8,6 +8,7 @@ class Jugador {
     var property position  
     var property numero  
     const totalTablero = 45
+    var property tablero
 
     method sumarPuntos(puntos){
         if(puntaje < limitePuntaje){
