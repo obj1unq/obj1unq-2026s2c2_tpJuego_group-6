@@ -111,7 +111,10 @@ class Tablero {
         celda.alternarEstado()
         self.agregarCeldaElegida(celda)
         self.evaluarElegidas2(puntaje)
-        self.mostrarVisualSelector(selector) //CAMBIAR
+
+        game.removeVisual(selector)         
+        game.addVisual(selector)
+        //self.mostrarVisualSelector(selector) //CAMBIAR
     }
 
     method mostrarVisualSelector(selector) {
@@ -140,7 +143,10 @@ class Tablero {
     // }
 
     method evaluarElegidas2(puntaje){
-        self.mostrarVisualSelector(selector) //CAMBIAR
+        //self.mostrarVisualSelector(selector) //CAMBIAR
+        game.removeVisual(selector)         
+        game.addVisual(selector)
+
         self.validarEvaluarElegidas(self.sumaElegidas(),puntaje) //revisar porque con la validacion tapa el borde rojo de la celda
         celdasElegidas.forEach({celda => celda.alternarEstado()})
         celdasElegidas.clear()
