@@ -24,30 +24,30 @@ object juego {
     method pasarMenu(){ //corregir?¿
         if (!juegoIniciado){
             juegoIniciado = true
-            self.avanzarEstado2() 
+            self.avanzarEstado() 
         } else {
-            self.avanzarEstado2()
+            self.avanzarEstado()
         }
     }
 
-    method avanzarEstado2() {
+    method avanzarEstado() {
         estado = estado.siguienteEstado()
     }
 
-    method incrementarJugadores2() {
+    method incrementarJugadores() {
         cantidadJugadoresSeleccionada = estado.incrementarJugadores(cantidadJugadoresSeleccionada)
     }
 
-    method decrementarJugadores2() {
+    method decrementarJugadores() {
         cantidadJugadoresSeleccionada = estado.decrementarJugadores(cantidadJugadoresSeleccionada)
     }
 
-    method siguientePuntaje2() {
+    method siguientePuntaje() {
         indicePuntaje = estado.siguientePuntaje(indicePuntaje,puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
     }
 
-    method anteriorPuntaje2() {
+    method anteriorPuntaje() {
         indicePuntaje = estado.anteriorPuntaje(indicePuntaje,puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
     }
@@ -110,21 +110,24 @@ object juego {
 
     method levantarRejas() {
         self.validarSiPuedenLevantarRejas()
-        tableros.forEach({tableroT => tableroT.levantarRejas()})
+        tableros.forEach({tableroT => tableroT.levantarRejas()}) //ESTO LEVANTA LAS REJAS SI TODOS LOS TABLEROS ESTAN CERRADOS
     }
 
     method validarSiPuedenLevantarRejas() {
-        const estanCerradas = tableros.all({tableroT => tableroT.cadaCeldaEstaCerrada()})
-        if(!estanCerradas){
+        if(!self.estanTodosLosTablerosCerrados()){
             self.error("todos los tableros no tienen sus celdas cerradas")
         }
+    }
+
+    method estanTodosLosTablerosCerrados() {
+        return tableros.all({tableroT => tableroT.cadaCeldaEstaCerrada()})
     }
 
     method comenzarPartidaReal() {
         game.removeVisual(menuPuntajeVisual)
 
-        const posicionesDisponiblesTableros = [game.at(1,6), game.at(12,6), game.at(1,12), game.at(12,12)]
-        const posicionesDisponibles = [game.at(1, 2), game.at(12, 2), game.at(1, 9), game.at(12, 9)]
+        const posicionesDisponiblesTableros = [game.at(1,5), game.at(12,5), game.at(1,11), game.at(12,11)]
+        const posicionesDisponibles = [game.at(1, 2), game.at(12, 2), game.at(1, 8), game.at(12, 8)]
     
         (1..cantidadJugadoresSeleccionada).forEach { i =>
             const pos = posicionesDisponibles.get(i - 1)
@@ -152,10 +155,10 @@ object juego {
 
     method pasarTurno() {
         indiceTurno = (indiceTurno + 1) % jugadores.size()
-        self.reacomoDarSelector()
+        self.reacomodarSelector()
     }
 
-    method reacomoDarSelector() {
+    method reacomodarSelector() {
       selector.position(self.tableroActual().posicionSelector(selector.numeroSeleccionado()))//CORREGIR
     }
 
@@ -240,11 +243,11 @@ object seleccionJugadores {
     }
 
     method presionarArriba(juego1) {
-        juego1.incrementarJugadores2()
+        juego1.incrementarJugadores()
     }
 
     method presionarAbajo(juego1) {
-        juego1.decrementarJugadores2()
+        juego1.decrementarJugadores()
     }
 
     method presionarEspacio(juego1, selectorActual){} //no hace nada
@@ -269,11 +272,11 @@ object seleccionPuntaje {
     }
 
     method presionarArriba(juego1) {
-        juego1.siguientePuntaje2()
+        juego1.siguientePuntaje()
     }
 
     method presionarAbajo(juego1) {
-        juego1.siguientePuntaje2()
+        juego1.siguientePuntaje()
     }
 
     method presionarEspacio(juego1, selectorActual){} //no hace nada
@@ -308,11 +311,6 @@ object jugando {
         juego1.levantarRejas()
     }
 
-    method presionarArriba(juego1) {
-        //no hace nada
-    }
-
-    method presionarAbajo(juego1) {
-        //no hace nada
-    }
+    method presionarArriba(juego1) {} //no hace nada
+    method presionarAbajo(juego1) {} //no hace nada
 }

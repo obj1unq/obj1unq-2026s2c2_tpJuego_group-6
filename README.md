@@ -23,7 +23,7 @@ EL JUEGO
         #· El jugador que inicia la partida ubicará el casillero plástico cerca suyo para poder cerrar
         #las celdas con facilidad pero a la vista de todos.          
 
-        . Se arrojan los 2 dados *[D]* y procede a cerrar las celdas
+        . Se arrojan los 2 dados *[G]* y procede a cerrar las celdas
         que coincidan con el puntaje obtenido y que considere conveniente.
 
         . Siempre se toma como puntaje la suma de los 2 dados y debe cerrar las celdas que
