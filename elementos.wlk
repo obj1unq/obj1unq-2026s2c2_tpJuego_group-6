@@ -12,8 +12,8 @@ class Dado {
 }
 
 object dados {
-    const dado1 = new Dado(position = game.at(8,4))
-    const dado2 = new Dado(position = game.at(9,4))
+    const dado1 = new Dado(position = game.at(10,4))
+    const dado2 = new Dado(position = game.at(11,4))
     var tiradas = true
 
 
@@ -43,7 +43,7 @@ object dados {
 }
 
 object selector {
-    var property position = game.origin().right(1).up(6)
+    var property position = game.at(1,5)//game.origin().right(1).up(5)
     var property numero = 1
 
     method image() = "selector-rojo.png"

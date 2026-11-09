@@ -8,9 +8,10 @@ class Jugador {
     var property position  
     var property numero  
     const totalTablero = 45
+    const tablero
 
     method sumarPuntos(puntos){
-        if(puntaje < limitePuntaje){
+        if(puntaje < limitePuntaje){ //CAMBIAR
             puntaje += puntos
         }   
     }
@@ -22,6 +23,10 @@ class Jugador {
     method puntaje()= totalTablero - puntaje        //Cambiar esto, hacer recorrido por celdas abiertas para saber cual fue el puntaje final de esa ronda
 
     method image() = "jugador-" + numero + ".png"
+
+    method tablero() {
+      return tablero
+    }
 }
 
 class Puntaje{
