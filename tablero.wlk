@@ -162,19 +162,20 @@ class Tablero {
 
     method confirmarJugada(jugador) {
         self.validarPuedeConfirmar()
-        self.sumarPuntos(jugador)
+        //self.sumarPuntos(jugador)
         celdasElegidas.clear()
         puedeElegir = false
         dados.habilitarJugada()
     }
 
     method sumarPuntos(jugador){
-    const puntajeRestante = self.celdasRestantes()
+    /*const puntajeRestante = self.celdasRestantes()
         if(celdasElegidas.isEmpty()){
             jugador.sumarPuntos(puntajeRestante)
         } else {
             jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
-        } 
+        }*/
+    jugador.sumarPuntos(self.celdasRestantes()) 
     }  
 
     method sumaElegidas(){
@@ -231,6 +232,6 @@ class Tablero {
     //self.reiniciarCelda()
     //}*/
     method reiniciarCelda(){
-        celdas.forEach({celda=> if (celda.cerrada()){celda.alternarEstado()}})
+        celdas.filter({celda=> celda.esCeldaCerrada()}).forEach({celda=> celda.alternarEstado()})
     }
 }
