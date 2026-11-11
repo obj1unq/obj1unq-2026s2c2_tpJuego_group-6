@@ -211,7 +211,7 @@ object juego {
         }
         tablero.deshabilitarJugada()
         dados.habilitarJugada()
-        jugador.terminoRonda(true)
+        jugador.terminoRonda(true) //CAMBIAR ESE TRUE
     }
 
     method jugadoresActivos() = jugadores.filter({ jugador => not jugador.estaEliminado() })
@@ -227,7 +227,7 @@ object juego {
 
     method empezarRonda() {
         tableros.forEach({ tablero => tablero.reiniciarCelda() })
-        jugadores.forEach({ jugador => jugador.terminoRonda(false) })
+        jugadores.forEach({ jugador => jugador.terminoRonda(false) }) //CAMBIAR ESE FALSE
         participantesRonda = self.jugadoresActivos()
         indiceTurno = 0
         self.saltearQuienNoJuega()
