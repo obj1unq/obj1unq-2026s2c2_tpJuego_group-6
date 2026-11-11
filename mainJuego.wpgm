@@ -7,23 +7,17 @@ import configuracion.*
 object config {
   method configurarEscenario() {
     game.title("El Preso")
-    game.height(12)
-    game.width(22)
+    game.height(11)
+    game.width(16)
     game.cellSize(64)
+    //game.boardGround("prision.png")
   }
 }
 
 program ElPreso {
   config.configurarEscenario()
-  
-  // tablero.mostrar()
   game.addVisual(pantallaInicioVisual)
   
-  // const jugador1 = new Jugador()
-  // const puntaje = new Puntaje(jugador = jugador1)
-  // dados.mostrar()
-  // game.addVisual(jugador1)
-  // game.addVisual(puntaje)
   // Controles de menú
   keyboard.enter().onPressDo({ juego.pasarMenu() })
   keyboard.up().onPressDo({ juego.presionarArriba() })

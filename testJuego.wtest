@@ -1,4 +1,4 @@
-import juego.*
+import configuracion.*
 import mainJuego.config
 
 // describe "tests del juego El Preso" {
