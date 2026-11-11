@@ -41,7 +41,7 @@ class Reja {
 
 class Tablero {
     var puedeElegir = false
-    const posicionInicial  //game.origin().right(1).up(6)
+    const posicionInicial
     const celdasElegidas = []
 
     const celdas = (1..9).map { numero =>
@@ -51,11 +51,11 @@ class Tablero {
         )
     }
     
-    method jugador() {
+    method jugador() { //CAMBIAR, ES una referencia global
       return Jugador
     }
 
-    method dados() {
+    method dados() { //CAMBIAR, ES una referencia global
       return dados
     }
 
@@ -87,30 +87,15 @@ class Tablero {
     }
 
     method habilitarJugada() {
-        //self.cancelarSeleccion() //porque este cancelarSeleccion esta aca?
         puedeElegir = true
     }
 
-    // method elegir(numero, puntaje){
-    //     if (puedeElegir) {
-    //         const celda = celdas.get(numero - 1)
-    //         if(not celda.esCeldaCerrada() and celdasElegidas.size() < 2){
-    //             celda.alternarEstado()
-    //             celdasElegidas.add(celda)
-    //             self.evaluarElegidas2(puntaje)
-
-    //             game.removeVisual(selector)         //CAMBIAR
-    //             game.addVisual(selector)            //CAMBIAR
-    //         }
-    //     }
-    // }
-
-    method elegir2(numeroC, puntaje){
+    method elegir(numeroC, puntaje){
         const celda = celdas.get(numeroC - 1)
         self.validarPuedeElegir(celda)
         celda.alternarEstado()
         self.agregarCeldaElegida(celda)
-        self.evaluarElegidas2(puntaje)
+        self.evaluarElegidas(puntaje)
         self.mostrarVisualSelector(selector) //CAMBIAR
     }
 
@@ -129,19 +114,9 @@ class Tablero {
       celdasElegidas.add(celda)
     }
 
-
-    // method evaluarElegidas(puntaje){
-    //     const suma = self.sumaElegidas()
-    //     if(suma > puntaje or (celdasElegidas.size() == 2 and suma != puntaje)){
-    //         celdasElegidas.forEach({celda => celda.alternarEstado()})
-    //         celdasElegidas.clear()
-    //         puedeElegir = false
-    //     }                
-    // }
-
-    method evaluarElegidas2(puntaje){
+    method evaluarElegidas(puntaje){
         self.mostrarVisualSelector(selector) //CAMBIAR
-        self.validarEvaluarElegidas(self.sumaElegidas(),puntaje) //revisar porque con la validacion tapa el borde rojo de la celda
+        self.validarEvaluarElegidas(self.sumaElegidas(),puntaje) //revisar porque con la validacion tapa el borde rojo de la celda al sacar el mostrarVisualSelector
         celdasElegidas.forEach({celda => celda.alternarEstado()})
         celdasElegidas.clear()
         puedeElegir = false              
@@ -162,20 +137,13 @@ class Tablero {
 
     method confirmarJugada(jugador) {
         self.validarPuedeConfirmar()
-        //self.sumarPuntos(jugador)
         celdasElegidas.clear()
         puedeElegir = false
         dados.habilitarJugada()
     }
 
     method sumarPuntos(jugador){
-    /*const puntajeRestante = self.celdasRestantes()
-        if(celdasElegidas.isEmpty()){
-            jugador.sumarPuntos(puntajeRestante)
-        } else {
-            jugador.sumarPuntos(celdasElegidas.sum({celda=> celda.numero()}))
-        }*/
-    jugador.sumarPuntos(self.celdasRestantes()) 
+        jugador.sumarPuntos(self.celdasRestantes()) 
     }  
 
     method sumaElegidas(){
@@ -220,17 +188,6 @@ class Tablero {
         celdasElegidas.clear()
     }
 
-    method puedeSeguirTurno(puntaje) {
-        return self.puedeCerrar(puntaje)
-    }
-
-    ///*   method terminarTurno(jugador) {
-    //    jugador.sumarPuntos(self.celdasRestantes())
-    //    if (self.cadaCeldaEstaCerrada()) {
-    //        jugador.restar10()
-    //}
-    //self.reiniciarCelda()
-    //}*/
     method reiniciarCelda(){
         celdas.filter({celda=> celda.esCeldaCerrada()}).forEach({celda=> celda.alternarEstado()})
     }
