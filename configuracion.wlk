@@ -236,7 +236,7 @@ object juego {
 
     method terminarPartida() {
         estado = finPartida
-        //estado.image()
+        //game.addVisual(finPartida) PROBAR
     //creo que faltaria poner en pantalla quien gana pero nose como!!
     }
 }

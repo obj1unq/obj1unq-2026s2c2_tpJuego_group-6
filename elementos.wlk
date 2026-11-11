@@ -243,10 +243,10 @@ object jugando {
     method presionarAbajo(juego1) {} //no hace nada
 }
 object finPartida {
-    const position = game.at(5,2)
+    const property position = game.at(5,2)
 
     method image() { //CHEQUEAR
-        return "Perdiste.png"
+        return "youwin.png"
     }
 
     method siguienteEstado() = self
