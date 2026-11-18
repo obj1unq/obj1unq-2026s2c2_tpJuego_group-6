@@ -84,7 +84,7 @@ class Tablero {
     }
 
     method deshabilitarJugada() {
-      estadoEleccion.avanzarEstado(self)
+      estadoEleccion = noElegido
     }
 
     method hayJugadaPosible() {
@@ -92,7 +92,7 @@ class Tablero {
     }
 
     method habilitarJugada() {
-        estadoEleccion.avanzarEstado(self)
+        estadoEleccion = elegido
     }
 
     method elegir(numeroC, puntaje){

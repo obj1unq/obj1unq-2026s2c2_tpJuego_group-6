@@ -1,5 +1,6 @@
-import configuracion.*
-import mainJuego.config
+import wollok.game.*
+import estados.*
+import tablero.*
 
 // describe "tests del juego El Preso" {
 
