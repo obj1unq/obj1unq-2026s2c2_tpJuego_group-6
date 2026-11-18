@@ -16,19 +16,14 @@ object juego {
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
-    var juegoIniciado = false
+    //var juegoIniciado = false
 
     method estado() = estado
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
 
-    method pasarMenu() {
-        if (!juegoIniciado) {
-            juegoIniciado = true
-            self.avanzarEstado()
-        } else {
-            self.avanzarEstado()
-        }
+    method pasarMenu() {//CAMBIAR
+        self.avanzarEstado()
     }
 
     method avanzarEstado() {
@@ -36,7 +31,7 @@ object juego {
     }
 
     method incrementarJugadores() {
-        cantidadJugadoresSeleccionada = estado.incrementarJugadores(cantidadJugadoresSeleccionada)
+        cantidadJugadoresSeleccionada = estado.incrementarJugadores(cantidadJugadoresSeleccionada) //cambiar estado. por mensaje de consulta
     }
 
     method decrementarJugadores() {

@@ -141,6 +141,27 @@ object indicadorTurno {
     method image() = "indicador-turno2.png"
 }
 
+class Estado { //india el estado del juego
+    method siguienteEstado(juego1) {
+      self.mostrar()
+    }
+
+    method mostrar()
+
+    method presionarEspacio(juego1, selectorActual)//no hace nada
+
+    method presionarG(juego1)  //no hace nada
+    method presionarP(juego1)//no hace nada
+    method presionarC(juego1) //no hace nada
+}
+
+class Inicio inherits Estado {
+    override method siguienteEstado(juego1) {
+      super(juego1)
+      juego1.estado(seleccionJugadores)
+    }
+}
+
 object inicio {
     method siguienteEstado() {
         game.removeVisual(pantallaInicioVisual)
@@ -156,10 +177,10 @@ object inicio {
 }
 
 object seleccionJugadores {
-    method siguienteEstado() {
+    method siguienteEstado() {//CAMBIAR POR QUE ETA ORDEN-CONSULTAS
         game.removeVisual(menuJugadoresVisual)
         game.addVisual(menuPuntajeVisual)
-        return seleccionPuntaje
+        return seleccionPuntaje //JUEGO.ESTADO(SELF)
     }
 
     method incrementarJugadores(cantJugadores) {
@@ -171,7 +192,7 @@ object seleccionJugadores {
     }
 
     method presionarArriba(juego1) {
-        juego1.incrementarJugadores()
+        juego1.incrementarJugadores() //juego.CANTJUGADORES()
     }
 
     method presionarAbajo(juego1) {
