@@ -1,6 +1,7 @@
 import wollok.game.*
 import elementos.*
 import jugadores.*
+import estados.*
 
 class Celda {
     var property position
