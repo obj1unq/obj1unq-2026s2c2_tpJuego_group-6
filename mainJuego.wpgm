@@ -19,7 +19,7 @@ program ElPreso {
   game.addVisual(pantallaInicioVisual)
   
   // Controles de menú
-  keyboard.enter().onPressDo({ juego.pasarMenu() })
+  keyboard.enter().onPressDo({ juego.presionarEnter() })
   keyboard.up().onPressDo({ juego.presionarArriba() })
   keyboard.down().onPressDo({ juego.presionarAbajo() })
   

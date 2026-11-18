@@ -3,8 +3,12 @@ import wollok.game.*
 import jugadores.*
 import tablero.*
 import elementos.*
-
 object juego {
+const inicio = new Inicio()
+const seleccionJugadores = new SeleccionJugadores()   
+const seleccionPuntaje = new SeleccionPuntaje()
+const jugando = new Jugando()
+const finPartida = new FinPartida()
     var estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
 
     const property jugadores = []
@@ -16,24 +20,23 @@ object juego {
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
-    var juegoIniciado = false
+    //var juegoIniciado = false
 
     method estado() = estado
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
 
-    method pasarMenu() {
-        if (!juegoIniciado) {
-            juegoIniciado = true
-            self.avanzarEstado()
-        } else {
-            self.avanzarEstado()
-        }
+    method estado(_estado){
+        estado = _estado
     }
 
-    method avanzarEstado() {
-        estado = estado.siguienteEstado()
+    method presionarEnter() {//AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
+      estado.siguienteEstado(self)
     }
+
+    //method avanzarEstado() {
+    //    estado = estado.siguienteEstado(self)
+    //}
 
     method incrementarJugadores() {
         cantidadJugadoresSeleccionada = estado.incrementarJugadores(cantidadJugadoresSeleccionada)
@@ -235,8 +238,8 @@ object juego {
     }
 
     method terminarPartida() {
-        estado = finPartida
-        //game.addVisual(finPartida) PROBAR
+        estado = FinPartida
+        //game.addVisual(fondoFinPartida) //PROBAR
     //creo que faltaria poner en pantalla quien gana pero nose como!!
     }
 }

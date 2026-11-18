@@ -141,120 +141,255 @@ object indicadorTurno {
     method image() = "indicador-turno2.png"
 }
 
-object inicio {
-    method siguienteEstado() {
-        game.removeVisual(pantallaInicioVisual)
-        game.addVisual(menuJugadoresVisual)
-        return seleccionJugadores
+class EstadoJuego {
+    method siguienteEstado(juego1) {
+      self.mostrar()
     }
 
-    method presionarEspacio(juego1, selectorActual){}//no hace nada
+    method mostrar()
 
-    method presionarG(juego1) {} //no hace nada
-    method presionarP(juego1){}//no hace nada
+    method presionarArriba(juego1){}
+    method presionarAbajo(juego1){}
+    method presionarEspacio(juego1, selectorActual){}//no hace nada
+    method presionarG(juego1){}  //no hace nada
+    method presionarP(juego1){} //no hace nada
     method presionarC(juego1){} //no hace nada
+    method levantarRejas(juego1){}
 }
 
-object seleccionJugadores {
-    method siguienteEstado() {
-        game.removeVisual(menuJugadoresVisual)
-        game.addVisual(menuPuntajeVisual)
-        return seleccionPuntaje
-    }
+class Inicio inherits EstadoJuego {
+   //const seleccionJugadores = new SeleccionJugadores()
+   override method siguienteEstado(juego1) {
+     super(juego1)
+     juego1.estado(new SeleccionJugadores())
+   }
 
-    method incrementarJugadores(cantJugadores) {
+   override method mostrar() {
+     game.removeVisual(pantallaInicioVisual)
+     game.addVisual(menuJugadoresVisual)
+   }
+}
+
+class SeleccionJugadores inherits EstadoJuego {
+    override method siguienteEstado(juego1) {
+     super(juego1)
+     juego1.estado(new SeleccionPuntaje())
+   }
+
+   override method mostrar() {
+     game.removeVisual(menuJugadoresVisual)
+     game.addVisual(menuPuntajeVisual)
+   }
+
+   method incrementarJugadores(cantJugadores) {//CAMBIAR A CONSULTA EL NOMBRE
         return if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
     }
 
-    method decrementarJugadores(cantJugadores) {
+    method decrementarJugadores(cantJugadores) { //CAMBIAR NOMBRE A CONSULTA
       return if (cantJugadores > 2) cantJugadores - 1 else cantJugadores
     }
 
-    method presionarArriba(juego1) {
+    override method presionarArriba(juego1) {
         juego1.incrementarJugadores()
     }
 
-    method presionarAbajo(juego1) {
+    override method presionarAbajo(juego1) {
         juego1.decrementarJugadores()
     }
-
-    method presionarEspacio(juego1, selectorActual){} //no hace nada
-    method presionarG(juego1) {} //no hace nada
-    method presionarP(juego1){}//no hace nada
-    method presionarC(juego1){} //no hace nada
 }
 
-object seleccionPuntaje {
-    const partida = juego
-    method siguienteEstado() {
-        partida.comenzarPartidaReal()
-        return jugando
-    }
+class SeleccionPuntaje inherits EstadoJuego {
+    override method siguienteEstado(juego1) {
+     super(juego1)
+     juego1.estado(new Jugando())
+     juego1.comenzarPartidaReal()
+   }
 
-    method siguientePuntaje(indiceP,puntajeD) {
+   override method mostrar() {
+     game.removeVisual(menuJugadoresVisual)
+     //game.addVisual(Jugando)
+   }
+
+   method siguientePuntaje(indiceP,puntajeD) { //CAMBIAR NOMBRE A CONSULTA
         return (indiceP + 1) % puntajeD.size()
     }
 
-    method anteriorPuntaje(indiceP,puntajeD) {
+    method anteriorPuntaje(indiceP,puntajeD) { //CAMBIAR NOMBRE A CONSULTA
         return (indiceP - 1 + puntajeD.size()) % puntajeD.size()
     }
 
-    method presionarArriba(juego1) {
+    override method presionarArriba(juego1) {
         juego1.siguientePuntaje()
     }
 
-    method presionarAbajo(juego1) {
+    override method presionarAbajo(juego1) {
         juego1.siguientePuntaje()
     }
-
-    method presionarEspacio(juego1, selectorActual){} //no hace nada
-    method presionarG(juego1) {} //no hace nada
-    method presionarP(juego1){}//no hace nada
-    method presionarC(juego1){} //no hace nada
 }
 
-object jugando {
-    
-    method siguienteEstado() {
-      return self
-    }
+class Jugando inherits EstadoJuego {
 
-    method presionarEspacio(juego1, selectorActual) {
+   override method mostrar() {
+     game.removeVisual(menuPuntajeVisual)
+   }
+
+    override method presionarEspacio(juego1, selectorActual) {
         juego1.elegirCelda(selectorActual)
     }
 
-    method presionarG(juego1) {
+    override method presionarG(juego1) {
         juego1.tirarDados()
     }
 
-    method presionarP(juego1) {
+    override method presionarP(juego1) {
         juego1.confirmarJugada()
     }
 
-    method presionarC(juego1) {
+    override method presionarC(juego1) {
         juego1.cancelarJugada()
     }
 
-    method levantarRejas(juego1) {
+    override method levantarRejas(juego1) {
         juego1.levantarRejas()
     }
-
-    method presionarArriba(juego1) {} //no hace nada
-    method presionarAbajo(juego1) {} //no hace nada
 }
-object finPartida {
+
+class FinPartida inherits EstadoJuego {
+    override method siguienteEstado(juego1) {
+     super(juego1)
+     juego1.estado(self)
+   }
+
+   override method mostrar() {
+     game.removeVisual(Jugando)
+     game.addVisual(fondoFinPartida)
+   }
+}
+
+
+object fondoFinPartida {
     const property position = game.at(5,2)
 
     method image() { //CHEQUEAR
         return "youwin.png"
     }
-
-    method siguienteEstado() = self
-    method presionarArriba(juego1) {} //no hace nada
-    method presionarAbajo(juego1) {} //no hace nada 
-    method presionarEspacio(juego1, selectorActual) {} //no hace nada
-    method presionarG(juego1) {} //no hace nada
-    method presionarP(juego1) {} //no hace nada
-    method presionarC(juego1) {} //no hace nada
-    method levantarRejas(juego1) {} //no hace nada
 }
+
+
+//object inicio inherits EstadoJuego {
+//    override method siguienteEstado(juego1) {
+//     super(juego1)
+//     juego1.estado(SeleccionJugadores)
+//   }
+//
+//   override method mostrar() {
+//     game.removeVisual(pantallaInicioVisual)
+//     game.addVisual(menuJugadoresVisual)
+//   }
+//}
+
+
+//object seleccionJugadores {
+//    method siguienteEstado() {
+//        game.removeVisual(menuJugadoresVisual)
+//        game.addVisual(menuPuntajeVisual)
+//        return seleccionPuntaje
+//    }
+//
+//    method incrementarJugadores(cantJugadores) {
+//        return if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
+//    }
+//
+//    method decrementarJugadores(cantJugadores) {
+//      return if (cantJugadores > 2) cantJugadores - 1 else cantJugadores
+//    }
+//
+//    method presionarArriba(juego1) {
+//        juego1.incrementarJugadores()
+//    }
+//
+//    method presionarAbajo(juego1) {
+//        juego1.decrementarJugadores()
+//    }
+//
+//    method presionarEspacio(juego1, selectorActual){} //no hace nada
+//    method presionarG(juego1) {} //no hace nada
+//    method presionarP(juego1){}//no hace nada
+//    method presionarC(juego1){} //no hace nada
+//}
+//
+//object seleccionPuntaje {
+//    const partida = juego
+//    method siguienteEstado() {
+//        partida.comenzarPartidaReal()
+//        return jugando
+//    }
+//
+//    method siguientePuntaje(indiceP,puntajeD) {
+//        return (indiceP + 1) % puntajeD.size()
+//    }
+//
+//    method anteriorPuntaje(indiceP,puntajeD) {
+//        return (indiceP - 1 + puntajeD.size()) % puntajeD.size()
+//    }
+//
+//    method presionarArriba(juego1) {
+//        juego1.siguientePuntaje()
+//    }
+//
+//    method presionarAbajo(juego1) {
+//        juego1.siguientePuntaje()
+//    }
+//
+//    method presionarEspacio(juego1, selectorActual){} //no hace nada
+//    method presionarG(juego1) {} //no hace nada
+//    method presionarP(juego1){}//no hace nada
+//    method presionarC(juego1){} //no hace nada
+//}
+//
+//object jugando {
+//    
+//    method siguienteEstado() {
+//      return self
+//    }
+//
+//    method presionarEspacio(juego1, selectorActual) {
+//        juego1.elegirCelda(selectorActual)
+//    }
+//
+//    method presionarG(juego1) {
+//        juego1.tirarDados()
+//    }
+//
+//    method presionarP(juego1) {
+//        juego1.confirmarJugada()
+//    }
+//
+//    method presionarC(juego1) {
+//        juego1.cancelarJugada()
+//    }
+//
+//    method levantarRejas(juego1) {
+//        juego1.levantarRejas()
+//    }
+//
+//    method presionarArriba(juego1) {} //no hace nada
+//    method presionarAbajo(juego1) {} //no hace nada
+//}
+//object finPartida {
+//    const property position = game.at(5,2)
+//
+//    method image() { //CHEQUEAR
+//        return "youwin.png"
+//    }
+//
+//    method siguienteEstado() = self
+//    method presionarArriba(juego1) {} //no hace nada
+//    method presionarAbajo(juego1) {} //no hace nada 
+//    method presionarEspacio(juego1, selectorActual) {} //no hace nada
+//    method presionarG(juego1) {} //no hace nada
+//    method presionarP(juego1) {} //no hace nada
+//    method presionarC(juego1) {} //no hace nada
+//    method levantarRejas(juego1) {} //no hace nada
+//}
+//
