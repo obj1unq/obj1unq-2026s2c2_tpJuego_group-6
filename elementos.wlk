@@ -1,5 +1,6 @@
 import wollok.game.*
 import configuracion.*
+import estados.*
 
 class Dado {
     var property numero = 1
@@ -15,8 +16,11 @@ class Dado {
 object dados {
     const dado1 = new Dado(position = game.at(5,1))
     const dado2 = new Dado(position = game.at(6,1))
-    var tiradas = true
+    var estadoDado = habilitado //HABILITADO PARA TIRAR DADO Y DESHABILITADO CUANDO NO PUEDE TIRAR. CAMBIAR NOMBRES SI ES NECESARIO
 
+    method estadoDado(_estadoDado) {
+      estadoDado = _estadoDado
+    }
 
     method mostrar(){
         game.addVisual(dado1)
@@ -25,7 +29,7 @@ object dados {
 
     method tirar(){
         self.validarSipuedeTirarDados()
-        tiradas = false
+        estadoDado.avanzarEstado(self)
         dado1.tirar()
         dado2.tirar()
     }
@@ -33,13 +37,13 @@ object dados {
     method puntaje() = dado1.numero() + dado2.numero() 
 
     method validarSipuedeTirarDados() {
-        if(!tiradas) {
+        if(!estadoDado.puedeTirar()) {
             self.error("No puede tirar mas de una vez el dado")
         }
     }
 
-    method habilitarJugada() {
-        tiradas = true
+    method habilitarJugadaDado() {
+        estadoDado.avanzarEstado(self)
     }
 }
 

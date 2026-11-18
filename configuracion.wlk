@@ -201,7 +201,7 @@ object juego {
             jugador.restar10()
         }
         tablero.deshabilitarJugada()
-        dados.habilitarJugada()
+        dados.habilitarJugadaDado()
         jugador.terminoRonda(true) //CAMBIAR ESE TRUE
     }
 

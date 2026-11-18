@@ -140,7 +140,7 @@ class Tablero {
         self.validarPuedeConfirmar()
         celdasElegidas.clear()
         puedeElegir = false
-        dados.habilitarJugada()
+        dados.habilitarJugadaDado()
     }
 
     method sumarPuntos(jugador){

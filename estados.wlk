@@ -36,6 +36,29 @@ object celdaAbierta {
 }
 
 //-------------------------------------
+//ESTADOS DEL DADO
+//-------------------------------------
+
+object habilitado {
+   method avanzarEstado(dados1){
+    dados1.estadoDado(deshabilitado)
+   }
+
+   method puedeTirar(){
+    return true
+   }
+}
+object deshabilitado {
+   method avanzarEstado(dados1){
+    dados1.estadoDado(habilitado)
+   }
+
+   method puedeTirar(){
+    return false
+   }
+}
+
+//-------------------------------------
 //ESTADOS DEL JUEGO Y OBJETOS VISUALES
 //-------------------------------------
 object pantallaInicioVisual {
