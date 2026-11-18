@@ -181,10 +181,11 @@ object juego {
         }
     }
 
-    method pasarTurnoSinJugada3() {
+    method pasarTurnoSinJugada() {
         self.validarNoHayJugadaPosible()
         self.terminarParticipacion()
         self.pasarTurno()
+        //dados.tirar() //dejarlo o no a criterio
     }
 
     method validarNoHayJugadaPosible() {
@@ -226,8 +227,6 @@ object juego {
     }
 
     method terminarPartida() {
-        estado = finPartida
-        game.addVisual(finPartida) //PROBAR
-    //creo que faltaria poner en pantalla quien gana pero nose como!!
+        estado.siguienteEstado(self)
     }
 }

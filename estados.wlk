@@ -1,6 +1,30 @@
 import configuracion.*
 
 //-------------------------------------
+//ESTADOS DEL TABLERO
+//-------------------------------------
+
+object elegido {
+    method puedeElegir() {
+      return true
+    }
+
+    method avanzarEstado(tableroT) {
+      tableroT.estadoEleccion(noElegido)
+    }
+}
+
+object noElegido {
+    method puedeElegir() {
+      return false
+    }
+
+    method avanzarEstado(tableroT) {
+      tableroT.estadoEleccion(elegido)
+    }
+} 
+
+//-------------------------------------
 //ESTADOS DE LA CELDA
 //-------------------------------------
 object celdaCerrada {
@@ -177,7 +201,7 @@ object jugando inherits EstadoJuego {
     }
 
     override method mostrar() {
-     game.removeVisual(menuPuntajeVisual)
+        game.removeVisual(menuPuntajeVisual)
    }
 
     override method presionarEspacio(juego1, selectorActual) {
@@ -201,28 +225,27 @@ object jugando inherits EstadoJuego {
     }
 }
 
+object seleccionAvatares { //COMPLETAR
 
-object finPartida {
-    const property position = game.at(5,2)
+}
 
-    method image() { //CHEQUEAR
-        return "youwin.png"
+
+object finPartida inherits EstadoJuego { 
+    override method siguienteEstado(juego1) {
+      self.mostrar()
+      juego1.estado(self)
+      game.schedule(5000, {game.stop()})
     }
 
-    method siguienteEstado() = self
-    method presionarArriba(juego1) {} //no hace nada
-    method presionarAbajo(juego1) {} //no hace nada 
-    method presionarEspacio(juego1, selectorActual) {} //no hace nada
-    method presionarG(juego1) {} //no hace nada
-    method presionarP(juego1) {} //no hace nada
-    method presionarC(juego1) {} //no hace nada
-    method levantarRejas(juego1) {} //no hace nada
+    override method mostrar() {
+      game.addVisual(fondoFinPartida)
+    }
 }
 
 object fondoFinPartida {
     const property position = game.at(5,2)
 
-    method image() { //CHEQUEAR
+    method image() { 
         return "youwin.png"
     }
 }
