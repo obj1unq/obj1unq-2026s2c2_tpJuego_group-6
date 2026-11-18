@@ -5,7 +5,7 @@ import tablero.*
 import elementos.*
 
 object juego {
-    var estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
+    var estado = inicio // "INICIO", "SELECCION_JUGADORES", "Seleccion avatar", "SELECCION_PUNTAJE", "JUGANDO", 
 
     const property jugadores = []
     const property tableros = []
@@ -236,7 +236,7 @@ object juego {
 
     method terminarPartida() {
         estado = finPartida
-        //game.addVisual(finPartida) PROBAR
+        game.addVisual(finPartida) 
     //creo que faltaria poner en pantalla quien gana pero nose como!!
     }
 }
