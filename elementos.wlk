@@ -15,8 +15,8 @@ class Dado {
 object dados {
     const dado1 = new Dado(position = game.at(5,1))
     const dado2 = new Dado(position = game.at(6,1))
-    var tiradas = true
-
+    //var tiradas = true
+    var estadoDado = tirar
 
     method mostrar(){
         game.addVisual(dado1)
@@ -25,23 +25,44 @@ object dados {
 
     method tirar(){
         self.validarSipuedeTirarDados()
-        tiradas = false
+        estadoDado = estadoDado.cambiarEstado()
         dado1.tirar()
         dado2.tirar()
+        
     }
 
     method puntaje() = dado1.numero() + dado2.numero() 
 
     method validarSipuedeTirarDados() {
-        if(!tiradas) {
+        if(!estadoDado.puedeTirar()) {
             self.error("No puede tirar mas de una vez el dado")
         }
     }
 
     method habilitarJugada() {
-        tiradas = true
+        estadoDado = estadoDado.cambiarEstado()
     }
 }
+object tirar {
+   method cambiarEstado(){
+    return tiradoD
+   }
+   method puedeTirar(){
+    return true
+   }
+}
+object tiradoD {
+   method cambiarEstado(){
+    return tirar
+   }
+   method puedeTirar(){
+    return false
+   }
+}
+
+
+
+
 
 object selector {
     var property position = game.at(1,5)//game.origin().right(1).up(5)

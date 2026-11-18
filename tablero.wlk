@@ -40,7 +40,8 @@ class Reja {
 }
 
 class Tablero {
-    var puedeElegir = false
+    //var puedeElegir = false
+    var estadoDeCelda = cerrada
     const posicionInicial
     const celdasElegidas = []
 
@@ -79,7 +80,7 @@ class Tablero {
     }
 
     method deshabilitarJugada() {
-      puedeElegir = false
+      estadoDeCelda = estadoDeCelda.cambiarEstado()
     }
 
     method hayJugadaPosible() {
@@ -87,7 +88,7 @@ class Tablero {
     }
 
     method habilitarJugada() {
-        puedeElegir = true
+        estadoDeCelda = estadoDeCelda.cambiarEstado()
     }
 
     method elegir(numeroC, puntaje){
@@ -105,7 +106,7 @@ class Tablero {
     }
 
     method validarPuedeElegir(celda) {
-        if(not puedeElegir or celda.esCeldaCerrada() or celdasElegidas.size() >= 2){
+        if(! estadoDeCelda.puedeCerrar() or celda.esCeldaCerrada() or celdasElegidas.size() >= 2){
             self.error("no puede elegir la celda")
         }
     }
@@ -119,7 +120,7 @@ class Tablero {
         self.validarEvaluarElegidas(self.sumaElegidas(),puntaje) //revisar porque con la validacion tapa el borde rojo de la celda al sacar el mostrarVisualSelector
         celdasElegidas.forEach({celda => celda.alternarEstado()})
         celdasElegidas.clear()
-        puedeElegir = false              
+        estadoDeCelda = estadoDeCelda.cambiarEstado()              
     }
 
 
@@ -138,7 +139,7 @@ class Tablero {
     method confirmarJugada(jugador) {
         self.validarPuedeConfirmar()
         celdasElegidas.clear()
-        puedeElegir = false
+        estadoDeCelda = estadoDeCelda.cambiarEstado()
         dados.habilitarJugada()
     }
 
@@ -150,11 +151,11 @@ class Tablero {
         return celdasElegidas.sum({celda => celda.numero()})
     }
 
-    method puedeCerrar(puntaje){
+    /*method puedeCerrar(puntaje){
         const celdasAbiertas = celdas.filter({celda=> not celda.cerrada()}).map({celda=> celda.numero()})
         return celdasAbiertas.any({celda=> celda == puntaje or 
                                   celdasAbiertas.any({abierta => celda != abierta and celda + abierta == puntaje})})
-    }
+    }*/
 
     method celdasRestantes(){
         return celdas.filter({celda=> not celda.esCeldaCerrada()}).sum({celda=>celda.numero()})
@@ -191,4 +192,22 @@ class Tablero {
     method reiniciarCelda(){
         celdas.filter({celda=> celda.esCeldaCerrada()}).forEach({celda=> celda.alternarEstado()})
     }
+}
+
+object cerrada {
+  method cambiarEstado(){
+    return abierta
+  }
+  method puedeCerrar(){
+    return false
+  }
+}
+
+object abierta {
+  method cambiarEstado(){
+    return cerrada
+  }
+  method puedeCerrar(){
+    return true
+  }
 }
