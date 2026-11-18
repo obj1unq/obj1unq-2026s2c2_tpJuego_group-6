@@ -1,6 +1,7 @@
 import wollok.game.*
 import elementos.*
 import jugadores.*
+import estados.*
 
 class Celda {
     var property position
@@ -40,9 +41,13 @@ class Reja {
 }
 
 class Tablero {
-    var puedeElegir = false
+    var estadoEleccion = noElegido //elegido o noElegido, indica si se puede elegir algunas de las celdas. CAMBIAR SI ES NECESARIO
     const posicionInicial
     const celdasElegidas = []
+
+    method estadoEleccion(_estadoEleccion) {
+      estadoEleccion = _estadoEleccion
+    }
 
     const celdas = (1..9).map { numero =>
         new Celda(
@@ -79,7 +84,7 @@ class Tablero {
     }
 
     method deshabilitarJugada() {
-      puedeElegir = false
+      estadoEleccion = noElegido
     }
 
     method hayJugadaPosible() {
@@ -87,7 +92,7 @@ class Tablero {
     }
 
     method habilitarJugada() {
-        puedeElegir = true
+        estadoEleccion = elegido
     }
 
     method elegir(numeroC, puntaje){
@@ -105,7 +110,7 @@ class Tablero {
     }
 
     method validarPuedeElegir(celda) {
-        if(not puedeElegir or celda.esCeldaCerrada() or celdasElegidas.size() >= 2){
+        if(not estadoEleccion.puedeElegir() or celda.esCeldaCerrada() or celdasElegidas.size() >= 2){
             self.error("no puede elegir la celda")
         }
     }
@@ -119,7 +124,7 @@ class Tablero {
         self.validarEvaluarElegidas(self.sumaElegidas(),puntaje) //revisar porque con la validacion tapa el borde rojo de la celda al sacar el mostrarVisualSelector
         celdasElegidas.forEach({celda => celda.alternarEstado()})
         celdasElegidas.clear()
-        puedeElegir = false              
+        estadoEleccion.avanzarEstado(self)              
     }
 
 
@@ -138,8 +143,8 @@ class Tablero {
     method confirmarJugada(jugador) {
         self.validarPuedeConfirmar()
         celdasElegidas.clear()
-        puedeElegir = false
-        dados.habilitarJugada()
+        estadoEleccion.avanzarEstado(self)
+        dados.habilitarJugadaDado()
     }
 
     method sumarPuntos(jugador){
@@ -148,12 +153,6 @@ class Tablero {
 
     method sumaElegidas(){
         return celdasElegidas.sum({celda => celda.numero()})
-    }
-
-    method puedeCerrar(puntaje){
-        const celdasAbiertas = celdas.filter({celda=> not celda.cerrada()}).map({celda=> celda.numero()})
-        return celdasAbiertas.any({celda=> celda == puntaje or 
-                                  celdasAbiertas.any({abierta => celda != abierta and celda + abierta == puntaje})})
     }
 
     method celdasRestantes(){

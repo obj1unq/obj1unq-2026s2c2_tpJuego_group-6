@@ -3,9 +3,10 @@ import wollok.game.*
 import jugadores.*
 import tablero.*
 import elementos.*
+import estados.*
 
 object juego {
-    var estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
+    var property estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
 
     const property jugadores = []
     const property tableros = []
@@ -16,39 +17,29 @@ object juego {
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
-    var juegoIniciado = false
 
-    method estado() = estado
+    //method estado() = estado
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
 
-    method pasarMenu() {
-        if (!juegoIniciado) {
-            juegoIniciado = true
-            self.avanzarEstado()
-        } else {
-            self.avanzarEstado()
-        }
-    }
-
-    method avanzarEstado() {
-        estado = estado.siguienteEstado()
+    method presionarEnter() { //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
+        estado.siguienteEstado(self)
     }
 
     method incrementarJugadores() {
-        cantidadJugadoresSeleccionada = estado.incrementarJugadores(cantidadJugadoresSeleccionada)
+        cantidadJugadoresSeleccionada = estado.cantidadDeJugadoresAJugar(cantidadJugadoresSeleccionada)
     }
 
     method decrementarJugadores() {
-        cantidadJugadoresSeleccionada = estado.decrementarJugadores(cantidadJugadoresSeleccionada)
+        cantidadJugadoresSeleccionada = estado.cantidadJugadoresASacar(cantidadJugadoresSeleccionada)
     }
 
-    method siguientePuntaje() {
+    method moverAsiguientePuntaje() {
         indicePuntaje = estado.siguientePuntaje(indicePuntaje, puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
     }
 
-    method anteriorPuntaje() {
+    method moverAnteriorPuntaje() {
         indicePuntaje = estado.anteriorPuntaje(indicePuntaje, puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
     }
@@ -190,10 +181,11 @@ object juego {
         }
     }
 
-    method pasarTurnoSinJugada3() {
+    method pasarTurnoSinJugada() {
         self.validarNoHayJugadaPosible()
         self.terminarParticipacion()
         self.pasarTurno()
+        //dados.tirar() //dejarlo o no a criterio
     }
 
     method validarNoHayJugadaPosible() {
@@ -210,7 +202,7 @@ object juego {
             jugador.restar10()
         }
         tablero.deshabilitarJugada()
-        dados.habilitarJugada()
+        dados.habilitarJugadaDado()
         jugador.terminoRonda(true) //CAMBIAR ESE TRUE
     }
 
@@ -235,8 +227,6 @@ object juego {
     }
 
     method terminarPartida() {
-        estado = finPartida
-        //game.addVisual(finPartida) PROBAR
-    //creo que faltaria poner en pantalla quien gana pero nose como!!
+        estado.siguienteEstado(self)
     }
 }
