@@ -9,7 +9,7 @@ object config {
   method configurarEscenario() {
     game.title("El Preso")
     game.height(11)
-    game.width(16)
+    game.width(14)
     game.cellSize(64)
     //game.boardGround("prision.png")
   }

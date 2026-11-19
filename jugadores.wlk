@@ -1,3 +1,4 @@
+import estados.*
 import wollok.game.*
 
 class Jugador {
@@ -25,6 +26,10 @@ class Jugador {
   method image() = ("jugador-" + numero) + ".png"
   
   method tablero() = tablero
+
+  method indicarSuTurno() {
+    return "Es tu turno jugador nro " + numero + ", toca G Para tirar los dados"
+  }
 }
 
 class Puntaje {

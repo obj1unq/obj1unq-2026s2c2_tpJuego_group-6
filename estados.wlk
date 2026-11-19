@@ -86,21 +86,27 @@ object deshabilitado {
 //ESTADOS DEL JUEGO Y OBJETOS VISUALES
 //-------------------------------------
 object pantallaInicioVisual {
-    var property position = game.at(0, 0)
+    var property position = game.at(-1, 0)
     method image() = "pantalla-inicio.png"
     // method text() = "--- EL PRESO ---\nPresione ENTER para comenzar"
 }
 
 object menuJugadoresVisual {
-    var property position = game.at(3, 5)
+    //var property position = game.at(3, 5)
+    var property position = game.at(-1, 0)
+    //const marcador = new Marcador(x = 10, y = 6)
     // method image() = "menu-" + juego.cantidadJugadoresSeleccionada() + "-jugadores.png" 
-    method text() = "--- JUGADORES: " + juego.cantidadJugadoresSeleccionada() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para confirmar"
+    //method text() = "--- JUGADORES: " + juego.cantidadJugadoresSeleccionada() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para confirmar"
+
+    method image() = "menuVisual.png"
 }
 
 object menuPuntajeVisual {
-    var property position = game.at(3, 5)
+    var property position = game.at(-1, 0)
+    //const marcador = new Marcador(x = 11, y = 6)
     // method image() = "menu-puntaje-" + juego.puntajeLimiteSeleccionado() + ".png" 
-    method text() = "--- LIMITE DE PUNTOS: " + juego.puntajeLimiteSeleccionado() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para empezar a jugar"
+    //method text() = "--- LIMITE DE PUNTOS: " + juego.puntajeLimiteSeleccionado() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para empezar a jugar"
+    method image() = "menuVisualP.png"
 }
 
 object indicadorTurno {
@@ -128,6 +134,7 @@ object inicio inherits EstadoJuego {
     override method siguienteEstado(juego1) {
      self.mostrar()
      juego1.estado(seleccionJugadores)
+     juego1.marcadorMenu().mostrar(juego1.cantidadJugadoresSeleccionada())
    }
 
    override method mostrar() {
@@ -140,7 +147,8 @@ object inicio inherits EstadoJuego {
 object seleccionJugadores inherits EstadoJuego {
     override method siguienteEstado(juego1) {
      self.mostrar()
-     juego1.estado(seleccionPuntaje)
+     juego1.estado(new SeleccionPuntaje())
+     juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
    }
 
    override method mostrar() {
@@ -148,7 +156,7 @@ object seleccionJugadores inherits EstadoJuego {
      game.addVisual(menuPuntajeVisual)
    }
 
-    method cantidadDeJugadoresAJugar(cantJugadores) { //cambiar a consulta
+    method cantidadDeJugadoresAJugar(cantJugadores) {
         return if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
     }
 
@@ -166,14 +174,15 @@ object seleccionJugadores inherits EstadoJuego {
 }
 
 
-object seleccionPuntaje inherits EstadoJuego{
+class SeleccionPuntaje inherits EstadoJuego{
     override method siguienteEstado(juego1) {
+     self.mostrar()
      juego1.estado(jugando)
      juego1.comenzarPartidaReal()
    }
 
    override method mostrar() {
-     game.removeVisual(menuJugadoresVisual)
+     game.removeVisual(menuPuntajeVisual)
    }
 
     method siguientePuntaje(indiceP,puntajeD) {
@@ -225,8 +234,8 @@ object jugando inherits EstadoJuego {
     }
 }
 
-object seleccionAvatares { //COMPLETAR
-
+object seleccionAvatares inherits SeleccionPuntaje{ //COMPLETAR
+    
 }
 
 

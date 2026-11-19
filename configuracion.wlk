@@ -6,7 +6,7 @@ import elementos.*
 import estados.*
 
 object juego {
-    var property estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
+    var property estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_AVARES", "SELECCION_PUNTAJE", "JUGANDO"
 
     const property jugadores = []
     const property tableros = []
@@ -17,31 +17,35 @@ object juego {
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
+    const property marcadorMenu = new Marcador(x = 10, y = 6)
 
-    //method estado() = estado
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
 
-    method presionarEnter() { //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
-        estado.siguienteEstado(self)
+    method presionarEnter() {
+        estado.siguienteEstado(self)  //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
     }
 
     method incrementarJugadores() {
         cantidadJugadoresSeleccionada = estado.cantidadDeJugadoresAJugar(cantidadJugadoresSeleccionada)
+        marcadorMenu.mostrar(cantidadJugadoresSeleccionada)
     }
 
     method decrementarJugadores() {
         cantidadJugadoresSeleccionada = estado.cantidadJugadoresASacar(cantidadJugadoresSeleccionada)
+        marcadorMenu.mostrar(cantidadJugadoresSeleccionada)
     }
 
     method moverAsiguientePuntaje() {
         indicePuntaje = estado.siguientePuntaje(indicePuntaje, puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
+        marcadorMenu.mostrar(puntajeLimiteSeleccionado)
     }
 
     method moverAnteriorPuntaje() {
         indicePuntaje = estado.anteriorPuntaje(indicePuntaje, puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
+        marcadorMenu.mostrar(puntajeLimiteSeleccionado)
     }
 
     method moverDerecha(selector) {
@@ -119,7 +123,7 @@ object juego {
     }
 
     method comenzarPartidaReal() {
-        game.removeVisual(menuPuntajeVisual)
+        marcadorMenu.limpiar()
 
         const posicionesDisponiblesTableros = [game.at(1,3), game.at(1,5), game.at(1,7), game.at(1,9)]
         const posicionesDisponibles = [game.at(10, 3), game.at(10, 5), game.at(10, 7), game.at(10, 9)]
@@ -157,10 +161,12 @@ object juego {
             indiceTurno = (indiceTurno + 1) % jugadores.size()
             self.saltearQuienNoJuega()
             self.reacomodarSelector()
+            game.say(self.jugadorActual(), self.jugadorActual().indicarSuTurno()) //INDICA EN PANTALLA CUANDO ES EL TURNO DEL JUGADOR ACTUAL
         } else {
             self.terminarRonda()
         }
     }
+
 
     method saltearQuienNoJuega() {
         if (not self.estaEnJuego(self.jugadorActual())) {
@@ -228,5 +234,41 @@ object juego {
 
     method terminarPartida() {
         estado.siguienteEstado(self)
+    }
+}
+
+class Digito {
+    const property numero
+    const property position
+
+    method image() = "numero-" + numero + ".png"
+}
+
+class Marcador {
+    const property x
+    const property y
+    const digitos = []
+  
+    method mostrar(numero) {
+      self.limpiar()
+      self.crearDigitos(numero)
+      self.dibujar()
+    }
+  
+    method crearDigitos(numero) {
+      const texto = numero.toString()
+      digitos.addAll((0..texto.size() - 1).map({ i => self.crearDigito(texto.charAt(i), i) }))
+    }
+  
+    method crearDigito(caracter, indice) =
+      new Digito(numero = caracter, position = game.at(x + indice, y))
+  
+    method dibujar() {
+      digitos.forEach({ d => game.addVisual(d) })
+    }
+  
+    method limpiar() {
+      digitos.forEach({ d => game.removeVisual(d) })
+      digitos.clear()
     }
 }
