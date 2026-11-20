@@ -5,21 +5,24 @@ object pantallaInicioVisual {
     // method text() = "--- EL PRESO ---\nPresione ENTER para comenzar"
 }
 
-object menuJugadoresVisual { //cambiar, a un solo objeto o clase, por que hace lo mismo que menuPuntajeVisuall
-    //var property position = game.at(3, 5)
-    var property position = game.at(-1, 0)
-    //const marcador = new Marcador(x = 10, y = 6)
-    // method image() = "menu-" + juego.cantidadJugadoresSeleccionada() + "-jugadores.png" 
-    //method text() = "--- JUGADORES: " + juego.cantidadJugadoresSeleccionada() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para confirmar"
+// object menuJugadoresVisual { //cambiar, a un solo objeto o clase, por que hace lo mismo que menuPuntajeVisuall
+//     //var property position = game.at(3, 5)
+//     var property position = game.at(-1, 0)
+//     // method image() = "menu-" + juego.cantidadJugadoresSeleccionada() + "-jugadores.png" 
+//     //method text() = "--- JUGADORES: " + juego.cantidadJugadoresSeleccionada() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para confirmar"
 
-    method image() = "celdas.png"
-}
+//     method image() = "celdas.png"
+// }
 
-object menuPuntajeVisual { //cambiar, a un solo objeto por que hace lo mismo que menuJHugadoreVisual
+// object menuPuntajeVisual { //cambiar, a un solo objeto por que hace lo mismo que menuJHugadoreVisual
+//     var property position = game.at(-1, 0)
+//     // method image() = "menu-puntaje-" + juego.puntajeLimiteSeleccionado() + ".png" 
+//     //method text() = "--- LIMITE DE PUNTOS: " + juego.puntajeLimiteSeleccionado() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para empezar a jugar"
+//     method image() = "celdas.png"
+// }
+
+object fondoVisual {
     var property position = game.at(-1, 0)
-    //const marcador = new Marcador(x = 11, y = 6)
-    // method image() = "menu-puntaje-" + juego.puntajeLimiteSeleccionado() + ".png" 
-    //method text() = "--- LIMITE DE PUNTOS: " + juego.puntajeLimiteSeleccionado() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para empezar a jugar"
     method image() = "celdas.png"
 }
 

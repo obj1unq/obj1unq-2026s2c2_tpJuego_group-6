@@ -110,7 +110,7 @@ object inicio inherits EstadoJuego {
    override method mostrar() {
      game.removeVisual(pantallaInicioVisual)
 
-     game.addVisual(menuJugadoresVisual)
+     game.addVisual(fondoVisual)
      game.addVisual(fondoJugadoresCantidad)
      game.addVisual(fondojugadores)
      game.addVisual(teclasArribaAbajo)
@@ -127,26 +127,22 @@ object seleccionJugadores inherits EstadoJuego {
    }
 
    override method mostrar() {
-     game.removeVisual(menuJugadoresVisual)
+     game.removeVisual(fondoVisual)
      game.removeVisual(fondoJugadoresCantidad)
      game.removeVisual(fondojugadores)
      game.removeVisual(teclasArribaAbajo)
      game.removeVisual(fondoEnter)
 
-     game.addVisual(menuPuntajeVisual)
+     game.addVisual(fondoVisual)
      game.addVisual(fondoCantidadPuntos)
      game.addVisual(teclasArribaAbajo)
      game.addVisual(fondoLimitePuntos)
      game.addVisual(fondoEnter)
    }
 
-    method cantidadDeJugadoresAJugar(cantJugadores) {
-        return if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
-    }
+    method cantidadDeJugadoresAJugar(cantJugadores) = if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
 
-    method cantidadJugadoresASacar(cantJugadores) {
-      return if (cantJugadores > 2) cantJugadores - 1 else cantJugadores
-    }
+    method cantidadJugadoresASacar(cantJugadores) = if (cantJugadores > 2) cantJugadores - 1 else cantJugadores
 
     override method presionarArriba(juego1) {
         juego1.incrementarJugadores()
@@ -166,7 +162,7 @@ class SeleccionPuntaje inherits EstadoJuego{
    }
 
    override method mostrar() {
-     game.removeVisual(menuPuntajeVisual)
+     game.removeVisual(fondoVisual)
 
      game.removeVisual(fondoCantidadPuntos)
      game.removeVisual(teclasArribaAbajo)
@@ -174,13 +170,9 @@ class SeleccionPuntaje inherits EstadoJuego{
      game.removeVisual(fondoEnter)
    }
 
-    method siguientePuntaje(indiceP,puntajeD) {
-        return (indiceP + 1) % puntajeD.size()
-    }
+    method siguientePuntaje(indiceP,puntajeD) = (indiceP + 1) % puntajeD.size()
 
-    method anteriorPuntaje(indiceP,puntajeD) {
-        return (indiceP - 1 + puntajeD.size()) % puntajeD.size()
-    }
+    method anteriorPuntaje(indiceP,puntajeD) = (indiceP - 1 + puntajeD.size()) % puntajeD.size()
 
     override method presionarArriba(juego1) {
         juego1.moverAsiguientePuntaje()
@@ -199,7 +191,7 @@ object jugando inherits EstadoJuego {
     }
 
     override method mostrar() {
-        game.removeVisual(menuPuntajeVisual)
+        game.removeVisual(fondoVisual)
    }
 
     override method presionarEspacio(juego1, selectorActual) {

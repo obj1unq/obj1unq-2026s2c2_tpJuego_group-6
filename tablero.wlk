@@ -57,13 +57,9 @@ class Tablero {
         )
     }
     
-    method jugador() { //CAMBIAR, ES una referencia global
-      return Jugador
-    }
+    method jugador() = Jugador //CAMBIAR, ES una referencia global
 
-    method dados() { //CAMBIAR, ES una referencia global
-      return dados
-    }
+    method dados() = dados //CAMBIAR, ES una referencia global
 
     method posicionSelector(numeroS) {
       return celdas.get(numeroS - 1).position()
@@ -80,9 +76,7 @@ class Tablero {
                                         celda1.numero() + celda2.numero() == dados.puntaje()})})
     }
 
-    method celdasAbiertas() {
-      return celdas.filter({celda => not celda.esCeldaCerrada()})
-    }
+    method celdasAbiertas() = celdas.filter({celda => not celda.esCeldaCerrada()})
 
     method deshabilitarJugada() {
       estadoEleccion = noElegido

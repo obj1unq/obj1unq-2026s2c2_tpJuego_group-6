@@ -241,38 +241,3 @@ object juego {
         return tableros.all({ tableroT => tableroT.cadaCeldaEstaCerrada() })
     }
 }
-
-class Digito {
-    const property numero
-    const property position
-
-    method image() = "numeroPuntaje-" + numero + ".png"
-}
-
-class Marcador {
-    const property x
-    const property y
-    const digitos = []
-  
-    method mostrar(numero) {
-      self.limpiar()
-      self.crearDigitos(numero)
-      self.dibujar()
-    }
-  
-    method crearDigitos(numero) {
-      const texto = numero.toString()
-      digitos.addAll((0..texto.size() - 1).map({ i => self.crearDigito(texto.charAt(i), i) }))
-    }
-  
-    method crearDigito(caracter, indice) = new Digito(numero = caracter, position = game.at(x + indice, y))
-  
-    method dibujar() {
-      digitos.forEach({ d => game.addVisual(d) })
-    }
-  
-    method limpiar() {
-      digitos.forEach({ d => game.removeVisual(d) })
-      digitos.clear()
-    }
-}

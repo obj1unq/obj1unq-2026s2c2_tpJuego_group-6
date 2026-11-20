@@ -32,7 +32,7 @@ program ElPreso {
   keyboard.g().onPressDo({ juego.presionarG() })
   keyboard.p().onPressDo({ juego.presionarP() })
   keyboard.c().onPressDo({ juego.presionarC() })
-  keyboard.t().onPressDo({ juego.alterarRejasCeldas() })
+  //keyboard.t().onPressDo({ juego.alterarRejasCeldas() })
   
   game.start()
 }
