@@ -37,19 +37,19 @@ object indicadorTurno {
 object fondoJugadoresCantidad {
     var property position = game.at(3,-2)
 
-    method image() = "fondojugadores.png"
+    method image() = "cantidadJugadoresFondo.png"
 }
 
 object fondojugadores {
     var property position = game.at(3,2)
 
-    method image() = "fondoj21.png"
+    method image() = "jugadoresFondo.png"
 }
 
 object teclasArribaAbajo {
     var property position = game.at(4,2)
 
-    method image() = "teclaarribaabajo21.png"
+    method image() = "teclaArribaAbajo.png"
 }
 
 object fondoCantidadPuntos {

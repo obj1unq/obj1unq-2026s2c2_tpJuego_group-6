@@ -21,8 +21,6 @@ class Jugador {
     puntaje = (puntaje - 10).max(0)
     marcador.mostrar(puntaje)
   }
-  
-  //method puntaje() = puntaje //marcador.mostrar(puntaje)
 
   method mostrarPuntaje() {
     marcador.mostrar(puntaje)
@@ -40,11 +38,3 @@ class Jugador {
 
   
 }
-
-// class Puntaje {
-//   var property jugador
-  
-//   method position() = jugador.position().down(1)
-  
-//   method text() = "Pts: " + jugador.puntaje().toString()
-// }
