@@ -1,4 +1,5 @@
 import configuracion.*
+import fondos.*
 
 //-------------------------------------
 //ESTADOS DEL TABLERO
@@ -83,44 +84,19 @@ object deshabilitado {
 }
 
 //-------------------------------------
-//ESTADOS DEL JUEGO Y OBJETOS VISUALES
+//ESTADOS DEL JUEGO
 //-------------------------------------
-object pantallaInicioVisual {
-    var property position = game.at(0, 0)
-    method image() = "pantalla-inicio.png"
-    // method text() = "--- EL PRESO ---\nPresione ENTER para comenzar"
-}
-
-object menuJugadoresVisual {
-    var property position = game.at(3, 5)
-    // method image() = "menu-" + juego.cantidadJugadoresSeleccionada() + "-jugadores.png" 
-    method text() = "--- JUGADORES: " + juego.cantidadJugadoresSeleccionada() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para confirmar"
-}
-
-object menuPuntajeVisual {
-    var property position = game.at(3, 5)
-    // method image() = "menu-puntaje-" + juego.puntajeLimiteSeleccionado() + ".png" 
-    method text() = "--- LIMITE DE PUNTOS: " + juego.puntajeLimiteSeleccionado() + " ---\nUse flecha ARRIBA / ABAJO\nPresione ENTER para empezar a jugar"
-}
-
-object indicadorTurno {
-    method position() {
-        // Se ubica un casillero arriba del jugador que tiene el turno actual
-        return juego.jugadorActual().position().right(1)
-    }
-    method image() = "indicador-turno2.png"
-}
 
 class EstadoJuego {
     method siguienteEstado(juego1) //abstracto
     method mostrar() //abstracto
-    method presionarArriba(juego1){} //no hace nada
-    method presionarAbajo(juego1){} //no hace nada
-    method presionarEspacio(juego1, selectorActual){} //no hace nada
-    method presionarG(juego1){}  //no hace nada
-    method presionarP(juego1){} //no hace nada
-    method presionarC(juego1){} //no hace nada
-    method levantarRejas(juego1){} //no hace nada
+    method presionarArriba(juego1){}
+    method presionarAbajo(juego1){}
+    method presionarEspacio(juego1, selectorActual){}
+    method presionarG(juego1){}
+    method presionarP(juego1){}
+    method presionarC(juego1){} 
+    method levantarRejas(juego1){} 
 }
 
 
@@ -128,11 +104,17 @@ object inicio inherits EstadoJuego {
     override method siguienteEstado(juego1) {
      self.mostrar()
      juego1.estado(seleccionJugadores)
+     juego1.marcadorMenu().mostrar(juego1.cantidadJugadoresSeleccionada())
    }
 
    override method mostrar() {
      game.removeVisual(pantallaInicioVisual)
-     game.addVisual(menuJugadoresVisual)
+
+     game.addVisual(fondoVisual)
+     game.addVisual(fondoJugadoresCantidad)
+     game.addVisual(fondojugadores)
+     game.addVisual(teclasArribaAbajo)
+     game.addVisual(fondoEnter)
    }
 }
 
@@ -140,21 +122,27 @@ object inicio inherits EstadoJuego {
 object seleccionJugadores inherits EstadoJuego {
     override method siguienteEstado(juego1) {
      self.mostrar()
-     juego1.estado(seleccionPuntaje)
+     juego1.estado(new SeleccionPuntaje())
+     juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
    }
 
    override method mostrar() {
-     game.removeVisual(menuJugadoresVisual)
-     game.addVisual(menuPuntajeVisual)
+     game.removeVisual(fondoVisual)
+     game.removeVisual(fondoJugadoresCantidad)
+     game.removeVisual(fondojugadores)
+     game.removeVisual(teclasArribaAbajo)
+     game.removeVisual(fondoEnter)
+
+     game.addVisual(fondoVisual)
+     game.addVisual(fondoCantidadPuntos)
+     game.addVisual(teclasArribaAbajo)
+     game.addVisual(fondoLimitePuntos)
+     game.addVisual(fondoEnter)
    }
 
-    method cantidadDeJugadoresAJugar(cantJugadores) { //cambiar a consulta
-        return if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
-    }
+    method cantidadDeJugadoresAJugar(cantJugadores) = if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
 
-    method cantidadJugadoresASacar(cantJugadores) {
-      return if (cantJugadores > 2) cantJugadores - 1 else cantJugadores
-    }
+    method cantidadJugadoresASacar(cantJugadores) = if (cantJugadores > 2) cantJugadores - 1 else cantJugadores
 
     override method presionarArriba(juego1) {
         juego1.incrementarJugadores()
@@ -166,23 +154,25 @@ object seleccionJugadores inherits EstadoJuego {
 }
 
 
-object seleccionPuntaje inherits EstadoJuego{
+class SeleccionPuntaje inherits EstadoJuego{
     override method siguienteEstado(juego1) {
+     self.mostrar()
      juego1.estado(jugando)
      juego1.comenzarPartidaReal()
    }
 
    override method mostrar() {
-     game.removeVisual(menuJugadoresVisual)
+     game.removeVisual(fondoVisual)
+
+     game.removeVisual(fondoCantidadPuntos)
+     game.removeVisual(teclasArribaAbajo)
+     game.removeVisual(fondoLimitePuntos)
+     game.removeVisual(fondoEnter)
    }
 
-    method siguientePuntaje(indiceP,puntajeD) {
-        return (indiceP + 1) % puntajeD.size()
-    }
+    method siguientePuntaje(indiceP,puntajeD) = (indiceP + 1) % puntajeD.size()
 
-    method anteriorPuntaje(indiceP,puntajeD) {
-        return (indiceP - 1 + puntajeD.size()) % puntajeD.size()
-    }
+    method anteriorPuntaje(indiceP,puntajeD) = (indiceP - 1 + puntajeD.size()) % puntajeD.size()
 
     override method presionarArriba(juego1) {
         juego1.moverAsiguientePuntaje()
@@ -201,7 +191,7 @@ object jugando inherits EstadoJuego {
     }
 
     override method mostrar() {
-        game.removeVisual(menuPuntajeVisual)
+        game.removeVisual(fondoVisual)
    }
 
     override method presionarEspacio(juego1, selectorActual) {
@@ -225,8 +215,8 @@ object jugando inherits EstadoJuego {
     }
 }
 
-object seleccionAvatares { //COMPLETAR
-
+object seleccionAvatares inherits SeleccionPuntaje{ //COMPLETAR
+    
 }
 
 

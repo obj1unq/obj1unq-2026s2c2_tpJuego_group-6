@@ -80,3 +80,38 @@ object selector {
         }
     }
 }
+
+class Puntaje {
+    const property numero
+    const property position
+
+    method image() = "numeroPuntaje-" + numero + ".png"
+}
+
+class Marcador {
+    const property x
+    const property y
+    const puntaje = []
+  
+    method mostrar(numero) {
+      self.limpiar()
+      self.crearDigitos(numero)
+      self.dibujar()
+    }
+  
+    method crearDigitos(numero) {
+      const texto = numero.toString()
+      puntaje.addAll((0..texto.size() - 1).map({ i => self.crearDigito(texto.charAt(i), i) }))
+    }
+  
+    method crearDigito(caracter, indice) = new Puntaje(numero = caracter, position = game.at(x + indice, y))
+  
+    method dibujar() {
+      puntaje.forEach({ d => game.addVisual(d) })
+    }
+  
+    method limpiar() {
+      puntaje.forEach({ d => game.removeVisual(d) })
+      puntaje.clear()
+    }
+}

@@ -4,9 +4,10 @@ import jugadores.*
 import tablero.*
 import elementos.*
 import estados.*
+import fondos.*
 
 object juego {
-    var property estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_PUNTAJE", "JUGANDO"
+    var property estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_AVARES", "SELECCION_PUNTAJE", "JUGANDO"
 
     const property jugadores = []
     const property tableros = []
@@ -17,31 +18,153 @@ object juego {
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
+    const property marcadorMenu = new Marcador(x = 9, y = 5)
 
-    //method estado() = estado
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
 
-    method presionarEnter() { //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
-        estado.siguienteEstado(self)
+    method presionarEnter() {
+        estado.siguienteEstado(self)  //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
     }
 
     method incrementarJugadores() {
         cantidadJugadoresSeleccionada = estado.cantidadDeJugadoresAJugar(cantidadJugadoresSeleccionada)
+        marcadorMenu.mostrar(cantidadJugadoresSeleccionada)
     }
 
     method decrementarJugadores() {
         cantidadJugadoresSeleccionada = estado.cantidadJugadoresASacar(cantidadJugadoresSeleccionada)
+        marcadorMenu.mostrar(cantidadJugadoresSeleccionada)
     }
 
     method moverAsiguientePuntaje() {
         indicePuntaje = estado.siguientePuntaje(indicePuntaje, puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
+        marcadorMenu.mostrar(puntajeLimiteSeleccionado)
     }
 
     method moverAnteriorPuntaje() {
         indicePuntaje = estado.anteriorPuntaje(indicePuntaje, puntajesDisponibles)
         puntajeLimiteSeleccionado = puntajesDisponibles.get(indicePuntaje)
+        marcadorMenu.mostrar(puntajeLimiteSeleccionado)
+    }
+
+    method comenzarPartidaReal() {
+        marcadorMenu.limpiar()
+
+        const posicionesDisponiblesTableros = [game.at(1,3), game.at(1,5), game.at(1,7), game.at(1,9)]
+        const posicionesDisponibles = [game.at(10, 3), game.at(10, 5), game.at(10, 7), game.at(10, 9)]
+
+        (1..cantidadJugadoresSeleccionada).forEach { i =>
+            const pos = posicionesDisponibles.get(i - 1)
+            const post = posicionesDisponiblesTableros.get(i - 1)
+            const t = new Tablero(posicionInicial = post)
+            const m = new Marcador(x = pos.x(), y = pos.y() - 1)
+            const j = new Jugador(numero = i, position = pos, limitePuntaje = puntajeLimiteSeleccionado, tablero = t ,marcador = m)
+
+            jugadores.add(j)
+            tableros.add(t)
+            game.addVisual(j)   // Muestra el sprite del jugador
+            t.mostrar()
+            //game.addVisual(new Puntaje(jugador = j)) // Muestra su puntaje abajo
+            j.mostrarPuntaje()
+            
+            
+        }
+
+        estado = jugando
+        dados.mostrar()
+        game.addVisual(selector)
+        game.addVisual(indicadorTurno)
+        self.empezarRonda()
+    }
+
+    method tableroActual() = self.jugadorActual().tablero()
+
+    method jugadorActual() = jugadores.get(indiceTurno)
+
+    method estaEnJuego(jugador) = not jugador.estaEliminado() and not jugador.terminoRonda()
+
+    method hayJugadoresEnJuego() = jugadores.any({ j => self.estaEnJuego(j) })
+
+    method pasarTurno() {
+        if (self.hayJugadoresEnJuego()) {
+            indiceTurno = (indiceTurno + 1) % jugadores.size()
+            self.saltearQuienNoJuega()
+            self.reacomodarSelector()
+            game.say(self.jugadorActual(), self.jugadorActual().indicarSuTurno()) //INDICA EN PANTALLA CUANDO ES EL TURNO DEL JUGADOR ACTUAL
+        } else {
+            self.terminarRonda()
+        }
+    }
+
+
+    method saltearQuienNoJuega() {
+        if (not self.estaEnJuego(self.jugadorActual())) {
+            indiceTurno = (indiceTurno + 1) % jugadores.size()
+            self.saltearQuienNoJuega()
+        }
+    }
+
+    method reacomodarSelector() {
+        selector.position(self.tableroActual().posicionSelector(selector.numeroSeleccionado()))
+    }
+
+    method pasarTurnoSinJugada2() {
+        if (not self.tableroActual().hayJugadaPosible()) {
+            self.terminarParticipacion()
+            self.pasarTurno()
+            //dados.tirar() //dejarlo o no a criterio
+        }
+    }
+
+    method pasarTurnoSinJugada() {
+        self.validarNoHayJugadaPosible()
+        self.terminarParticipacion()
+        self.pasarTurno()
+        //dados.tirar() //dejarlo o no a criterio
+    }
+
+    method validarNoHayJugadaPosible() {
+        if (self.tableroActual().hayJugadaPosible()) {
+            self.error("Todavia hay una jugada posible")
+        }
+    }
+
+    method terminarParticipacion() {
+        const jugador = self.jugadorActual()
+        const tablero = self.tableroActual()
+        tablero.sumarPuntos(jugador)
+        if (tablero.cadaCeldaEstaCerrada()) {
+            jugador.restar10()
+        }
+        tablero.deshabilitarJugada()
+        dados.habilitarJugadaDado()
+        jugador.terminoRonda(true) //CAMBIAR ESE TRUE
+    }
+
+    method jugadoresActivos() = jugadores.filter({ jugador => not jugador.estaEliminado() })
+
+    method terminarRonda() {
+        const restantes = self.jugadoresActivos()
+        if (restantes.size() <= 1) {
+            self.terminarPartida()
+            }else {
+            self.empezarRonda()
+        }
+    }
+
+    method empezarRonda() {
+        tableros.forEach({ tablero => tablero.reiniciarCelda() })
+        jugadores.forEach({ jugador => jugador.terminoRonda(false) }) //CAMBIAR ESE FALSE
+        participantesRonda = self.jugadoresActivos()
+        indiceTurno = 0
+        self.saltearQuienNoJuega()
+        self.reacomodarSelector()
+    }
+
+    method terminarPartida() {
+        estado.siguienteEstado(self)
     }
 
     method moverDerecha(selector) {
@@ -116,117 +239,5 @@ object juego {
 
     method estanTodosLosTablerosCerrados() {
         return tableros.all({ tableroT => tableroT.cadaCeldaEstaCerrada() })
-    }
-
-    method comenzarPartidaReal() {
-        game.removeVisual(menuPuntajeVisual)
-
-        const posicionesDisponiblesTableros = [game.at(1,3), game.at(1,5), game.at(1,7), game.at(1,9)]
-        const posicionesDisponibles = [game.at(10, 3), game.at(10, 5), game.at(10, 7), game.at(10, 9)]
-
-        (1..cantidadJugadoresSeleccionada).forEach { i =>
-            const pos = posicionesDisponibles.get(i - 1)
-            const post = posicionesDisponiblesTableros.get(i - 1)
-            const t = new Tablero(posicionInicial = post)
-            const j = new Jugador(numero = i, position = pos, limitePuntaje = puntajeLimiteSeleccionado, tablero = t)
-
-            jugadores.add(j)
-            tableros.add(t)
-            game.addVisual(j)   // Muestra el sprite del jugador
-            t.mostrar()
-            game.addVisual(new Puntaje(jugador = j)) // Muestra su puntaje abajo
-        }
-
-        estado = jugando
-        dados.mostrar()
-        game.addVisual(selector)
-        game.addVisual(indicadorTurno)
-        self.empezarRonda()
-    }
-
-    method tableroActual() = self.jugadorActual().tablero()
-
-    method jugadorActual() = jugadores.get(indiceTurno)
-
-    method estaEnJuego(jugador) = not jugador.estaEliminado() and not jugador.terminoRonda()
-
-    method hayJugadoresEnJuego() = jugadores.any({ j => self.estaEnJuego(j) })
-
-    method pasarTurno() {
-        if (self.hayJugadoresEnJuego()) {
-            indiceTurno = (indiceTurno + 1) % jugadores.size()
-            self.saltearQuienNoJuega()
-            self.reacomodarSelector()
-        } else {
-            self.terminarRonda()
-        }
-    }
-
-    method saltearQuienNoJuega() {
-        if (not self.estaEnJuego(self.jugadorActual())) {
-            indiceTurno = (indiceTurno + 1) % jugadores.size()
-            self.saltearQuienNoJuega()
-        }
-    }
-
-    method reacomodarSelector() {
-        selector.position(self.tableroActual().posicionSelector(selector.numeroSeleccionado()))
-    }
-
-    method pasarTurnoSinJugada2() {
-        if (not self.tableroActual().hayJugadaPosible()) {
-            self.terminarParticipacion()
-            self.pasarTurno()
-            //dados.tirar() //dejarlo o no a criterio
-        }
-    }
-
-    method pasarTurnoSinJugada() {
-        self.validarNoHayJugadaPosible()
-        self.terminarParticipacion()
-        self.pasarTurno()
-        //dados.tirar() //dejarlo o no a criterio
-    }
-
-    method validarNoHayJugadaPosible() {
-        if (self.tableroActual().hayJugadaPosible()) {
-            self.error("Todavia hay una jugada posible")
-        }
-    }
-
-    method terminarParticipacion() {
-        const jugador = self.jugadorActual()
-        const tablero = self.tableroActual()
-        tablero.sumarPuntos(jugador)
-        if (tablero.cadaCeldaEstaCerrada()) {
-            jugador.restar10()
-        }
-        tablero.deshabilitarJugada()
-        dados.habilitarJugadaDado()
-        jugador.terminoRonda(true) //CAMBIAR ESE TRUE
-    }
-
-    method jugadoresActivos() = jugadores.filter({ jugador => not jugador.estaEliminado() })
-
-    method terminarRonda() {
-        const restantes = self.jugadoresActivos()
-        if (restantes.size() <= 1) {
-            self.terminarPartida()
-            }else {
-            self.empezarRonda()
-        }
-    }
-
-    method empezarRonda() {
-        tableros.forEach({ tablero => tablero.reiniciarCelda() })
-        jugadores.forEach({ jugador => jugador.terminoRonda(false) }) //CAMBIAR ESE FALSE
-        participantesRonda = self.jugadoresActivos()
-        indiceTurno = 0
-        self.saltearQuienNoJuega()
-        self.reacomodarSelector()
-    }
-
-    method terminarPartida() {
-        estado.siguienteEstado(self)
     }
 }
