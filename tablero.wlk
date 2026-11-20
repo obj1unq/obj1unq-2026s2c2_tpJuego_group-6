@@ -26,6 +26,7 @@ class Celda {
     }
 
     method esCeldaCerrada() = estado.tieneReja()
+
 }
 
 class BordeCelda {

@@ -11,7 +11,7 @@ object config {
     game.height(11)
     game.width(14)
     game.cellSize(64)
-    //game.boardGround("prision.png")
+    game.boardGround("prisionfondo.png")
   }
 }
 

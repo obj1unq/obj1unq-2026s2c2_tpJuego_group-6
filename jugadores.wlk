@@ -4,7 +4,6 @@ import wollok.game.*
 class Jugador {
   var puntaje = 0
   var property limitePuntaje = 50
-  //var turnos
   var property terminoRonda = false
   const property celdasElegidas = []
   var property position
