@@ -4,6 +4,7 @@ import elementos.*
 import tablero.*
 import configuracion.*
 import estados.*
+import fondos.*
 
 object config {
   method configurarEscenario() {

@@ -4,6 +4,7 @@ import jugadores.*
 import tablero.*
 import elementos.*
 import estados.*
+import fondos.*
 
 object juego {
     var property estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_AVARES", "SELECCION_PUNTAJE", "JUGANDO"
@@ -17,7 +18,7 @@ object juego {
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
-    const property marcadorMenu = new Marcador(x = 10, y = 6)
+    const property marcadorMenu = new Marcador(x = 9, y = 5)
 
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
@@ -48,80 +49,6 @@ object juego {
         marcadorMenu.mostrar(puntajeLimiteSeleccionado)
     }
 
-    method moverDerecha(selector) {
-        selector.moverDerecha()
-    }
-
-    method moverIzquierda(selector) {
-        selector.moverIzquierda()
-    }
-
-    method presionarArriba() {
-        estado.presionarArriba(self)
-    }
-
-    method presionarAbajo() {
-        estado.presionarAbajo(self)
-    }
-
-    method presionarEspacio(selectorActual) {
-        estado.presionarEspacio(self, selectorActual)
-    }
-
-    method presionarG() {
-        estado.presionarG(self)
-    }
-
-    method presionarP() {
-        estado.presionarP(self)
-    }
-
-    method presionarC() {
-        estado.presionarC(self)
-    }
-
-    method alterarRejasCeldas() {
-        estado.levantarRejas(self)
-    }
-
-    method elegirCelda(selectorActual) {
-        self.tableroActual().elegir(selectorActual.numeroSeleccionado(), dados.puntaje())
-    }
-
-    method tirarDados() {
-        dados.tirar()
-        self.tableroActual().habilitarJugada()
-        self.pasarTurnoSinJugada2()
-    }
-
-    method confirmarJugada() {
-        self.tableroActual().confirmarJugada(self.jugadorActual())
-        if (self.tableroActual().cadaCeldaEstaCerrada()) {
-            self.terminarParticipacion()
-        }
-        self.pasarTurno()
-    }
-
-    method cancelarJugada() {
-        self.tableroActual().cancelarSeleccion()
-        self.tableroActual().habilitarJugada()
-    }
-
-    method levantarRejas() {
-        self.validarSiPuedenLevantarRejas()
-        tableros.forEach({ tableroT => tableroT.levantarRejas() })
-    }
-
-    method validarSiPuedenLevantarRejas() {
-        if (!self.estanTodosLosTablerosCerrados()) {
-            self.error("todos los tableros no tienen sus celdas cerradas")
-        }
-    }
-
-    method estanTodosLosTablerosCerrados() {
-        return tableros.all({ tableroT => tableroT.cadaCeldaEstaCerrada() })
-    }
-
     method comenzarPartidaReal() {
         marcadorMenu.limpiar()
 
@@ -132,13 +59,17 @@ object juego {
             const pos = posicionesDisponibles.get(i - 1)
             const post = posicionesDisponiblesTableros.get(i - 1)
             const t = new Tablero(posicionInicial = post)
-            const j = new Jugador(numero = i, position = pos, limitePuntaje = puntajeLimiteSeleccionado, tablero = t)
+            const m = new Marcador(x = pos.x(), y = pos.y() - 1)
+            const j = new Jugador(numero = i, position = pos, limitePuntaje = puntajeLimiteSeleccionado, tablero = t ,marcador = m)
 
             jugadores.add(j)
             tableros.add(t)
             game.addVisual(j)   // Muestra el sprite del jugador
             t.mostrar()
-            game.addVisual(new Puntaje(jugador = j)) // Muestra su puntaje abajo
+            //game.addVisual(new Puntaje(jugador = j)) // Muestra su puntaje abajo
+            j.mostrarPuntaje()
+            
+            
         }
 
         estado = jugando
@@ -235,13 +166,87 @@ object juego {
     method terminarPartida() {
         estado.siguienteEstado(self)
     }
+
+    method moverDerecha(selector) {
+        selector.moverDerecha()
+    }
+
+    method moverIzquierda(selector) {
+        selector.moverIzquierda()
+    }
+
+    method presionarArriba() {
+        estado.presionarArriba(self)
+    }
+
+    method presionarAbajo() {
+        estado.presionarAbajo(self)
+    }
+
+    method presionarEspacio(selectorActual) {
+        estado.presionarEspacio(self, selectorActual)
+    }
+
+    method presionarG() {
+        estado.presionarG(self)
+    }
+
+    method presionarP() {
+        estado.presionarP(self)
+    }
+
+    method presionarC() {
+        estado.presionarC(self)
+    }
+
+    method alterarRejasCeldas() {
+        estado.levantarRejas(self)
+    }
+
+    method elegirCelda(selectorActual) {
+        self.tableroActual().elegir(selectorActual.numeroSeleccionado(), dados.puntaje())
+    }
+
+    method tirarDados() {
+        dados.tirar()
+        self.tableroActual().habilitarJugada()
+        self.pasarTurnoSinJugada2()
+    }
+
+    method confirmarJugada() {
+        self.tableroActual().confirmarJugada(self.jugadorActual())
+        if (self.tableroActual().cadaCeldaEstaCerrada()) {
+            self.terminarParticipacion()
+        }
+        self.pasarTurno()
+    }
+
+    method cancelarJugada() {
+        self.tableroActual().cancelarSeleccion()
+        self.tableroActual().habilitarJugada()
+    }
+
+    method levantarRejas() {
+        self.validarSiPuedenLevantarRejas()
+        tableros.forEach({ tableroT => tableroT.levantarRejas() })
+    }
+
+    method validarSiPuedenLevantarRejas() {
+        if (!self.estanTodosLosTablerosCerrados()) {
+            self.error("todos los tableros no tienen sus celdas cerradas")
+        }
+    }
+
+    method estanTodosLosTablerosCerrados() {
+        return tableros.all({ tableroT => tableroT.cadaCeldaEstaCerrada() })
+    }
 }
 
 class Digito {
     const property numero
     const property position
 
-    method image() = "numero-" + numero + ".png"
+    method image() = "numeroPuntaje-" + numero + ".png"
 }
 
 class Marcador {
@@ -260,8 +265,7 @@ class Marcador {
       digitos.addAll((0..texto.size() - 1).map({ i => self.crearDigito(texto.charAt(i), i) }))
     }
   
-    method crearDigito(caracter, indice) =
-      new Digito(numero = caracter, position = game.at(x + indice, y))
+    method crearDigito(caracter, indice) = new Digito(numero = caracter, position = game.at(x + indice, y))
   
     method dibujar() {
       digitos.forEach({ d => game.addVisual(d) })
