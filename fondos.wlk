@@ -47,7 +47,7 @@ object fondojugadores {
 }
 
 object teclasArribaAbajo {
-    var property position = game.at(4,2)
+    var property position = game.at(2,2)
 
     method image() = "teclaArribaAbajo.png"
 }
@@ -68,4 +68,9 @@ object fondoEnter {
     var property position = game.at(3,-3)
 
     method image() = "presionarenter.png"
+}
+object vistaAvatar {
+  var property position = game.at(6,4)
+  method image() = "amongus-" + juego.avatarEnSeleccion() + ".png"
+  method text() = "Jugador " + juego.jugadorEligiendo() 
 }
