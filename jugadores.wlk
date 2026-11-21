@@ -10,7 +10,8 @@ class Jugador {
   var property position
   var property numero
   const tablero
-  const marcador 
+  const marcador
+  var property avatar   
   
   method sumarPuntos(puntos) {
     puntaje = puntaje + puntos
@@ -28,7 +29,7 @@ class Jugador {
   
   method estaEliminado() = puntaje >= limitePuntaje
   
-  method image() = ("jugador-" + numero) + ".png"
+  method image() = "amongus-" + avatar + ".png"
   
   method tablero() = tablero
 

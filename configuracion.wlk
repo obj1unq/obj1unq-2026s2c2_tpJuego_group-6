@@ -14,6 +14,12 @@ object juego {
     var indiceTurno = 0
     var participantesRonda = []
 
+    const avataresDisponibels = [1,2,3,4,5,6,7,8]
+    const avataresElegidos = []
+    var avatarCursor = 1
+    var jugadorEligiendo = 1
+    var indiceAvatar = 0
+
     var cantidadJugadoresSeleccionada = 2
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
@@ -22,6 +28,50 @@ object juego {
 
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
+
+    method avatarEnSeleccion() = avataresDisponibels.get(indiceAvatar)
+    method jugadorEligiendo() = jugadorEligiendo
+
+    method avataresDisponibles() = avataresDisponibels.filter({avatar => not avataresElegidos.contains(avatar)})
+
+    method iniciarSeleccionAvatar(){
+        avataresElegidos.clear()
+        jugadorEligiendo = 1
+        avatarCursor = self.avataresDisponibles().first()
+    }
+    //no se me ocurre como hacer sin recursion
+    method siguienteLibre(desde, avatar){
+        const total = avataresDisponibels.size()
+        const elegido = ((desde - 1 + avatar) % total) + 1
+        return if(avataresElegidos.contains(elegido)){
+            self.siguienteLibre(elegido, avatar)
+        }else{
+            elegido
+        }
+    }
+    method iniciarSeleccion(){
+        avataresElegidos.clear()
+        jugadorEligiendo = 1
+        indiceAvatar = 0
+    }
+    
+
+    method moverAvatar(avatar){
+        avatarCursor = self.siguienteLibre(avatarCursor, avatar)
+        const total = avataresDisponibels.size()
+        indiceAvatar = (indiceAvatar + avatar + total) % total
+
+    }
+    
+    method confirmarAvatar(){
+        avataresElegidos.add(avatarCursor)
+        indiceAvatar = 0
+        if(not self.todosEligieronAvatar()){
+            jugadorEligiendo = jugadorEligiendo + 1
+        }
+    }
+
+    method todosEligieronAvatar()= avataresElegidos.size() == cantidadJugadoresSeleccionada
 
     method presionarEnter() {
         estado.siguienteEstado(self)  //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
@@ -60,7 +110,7 @@ object juego {
             const post = posicionesDisponiblesTableros.get(i - 1)
             const t = new Tablero(posicionInicial = post)
             const m = new Marcador(x = pos.x(), y = pos.y() - 1)
-            const j = new Jugador(numero = i, position = pos, limitePuntaje = puntajeLimiteSeleccionado, tablero = t ,marcador = m)
+            const j = new Jugador(numero = i, position = pos, limitePuntaje = puntajeLimiteSeleccionado, tablero = t ,marcador = m, avatar = avataresElegidos.get(i-1))
 
             jugadores.add(j)
             tableros.add(t)
@@ -168,11 +218,13 @@ object juego {
     }
 
     method moverDerecha(selector) {
-        selector.moverDerecha()
+        //selector.moverDerecha()
+        estado.presionarDerecha(self, selector)
     }
 
     method moverIzquierda(selector) {
-        selector.moverIzquierda()
+        //selector.moverIzquierda()
+        estado.presionarIzquierda(self, selector)
     }
 
     method presionarArriba() {

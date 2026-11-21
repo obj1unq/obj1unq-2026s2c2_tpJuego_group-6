@@ -92,6 +92,8 @@ class EstadoJuego {
     method mostrar() //abstracto
     method presionarArriba(juego1){}
     method presionarAbajo(juego1){}
+    method presionarDerecha(juego1, selectorActual){}   //prefiero con arriba y abajo pero como quieras
+    method presionarIzquierda(juego1, selectorActual){} 
     method presionarEspacio(juego1, selectorActual){}
     method presionarG(juego1){}
     method presionarP(juego1){}
@@ -122,8 +124,11 @@ object inicio inherits EstadoJuego {
 object seleccionJugadores inherits EstadoJuego {
     override method siguienteEstado(juego1) {
      self.mostrar()
-     juego1.estado(new SeleccionPuntaje())
-     juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
+     juego1.marcadorMenu().limpiar()
+     juego1.iniciarSeleccionAvatar()
+     juego1.estado(seleccionAvatares)
+     /*juego1.estado(new SeleccionPuntaje())
+     juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())*/
    }
 
    override method mostrar() {
@@ -134,10 +139,11 @@ object seleccionJugadores inherits EstadoJuego {
      game.removeVisual(fondoEnter)
 
      game.addVisual(fondoVisual)
-     game.addVisual(fondoCantidadPuntos)
-     game.addVisual(teclasArribaAbajo)
-     game.addVisual(fondoLimitePuntos)
+     game.addVisual(vistaAvatar)
      game.addVisual(fondoEnter)
+     game.addVisual(teclasArribaAbajo)
+    /* game.addVisual(fondoCantidadPuntos)
+     game.addVisual(fondoLimitePuntos)*/
    }
 
     method cantidadDeJugadoresAJugar(cantJugadores) = if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
@@ -213,10 +219,38 @@ object jugando inherits EstadoJuego {
     override method levantarRejas(juego1) {
         juego1.levantarRejas()
     }
+    override method presionarDerecha(juego1, selectorActual) {
+        selectorActual.moverDerecha()
+    }
+
+    override method presionarIzquierda(juego1, selectorActual) {
+        selectorActual.moverIzquierda()
+    }
 }
 
-object seleccionAvatares inherits SeleccionPuntaje{ //COMPLETAR
-    
+object seleccionAvatares inherits EstadoJuego{ //COMPLETAR
+    override method siguienteEstado(juego1){
+      juego1.confirmarAvatar()
+      if(juego1.todosEligieronAvatar()){
+        self.mostrar()
+        juego1.estado(new SeleccionPuntaje())
+        juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
+      }
+    }
+    override method mostrar(){
+      game.removeVisual(fondoVisual)
+      game.removeVisual(vistaAvatar)
+      game.removeVisual(fondoEnter)
+      game.removeVisual(teclasArribaAbajo)
+
+      game.addVisual(fondoVisual)
+      game.addVisual(fondoCantidadPuntos)
+      game.addVisual(teclasArribaAbajo)
+      game.addVisual(fondoLimitePuntos)
+      game.addVisual(fondoEnter)
+    }
+    override method presionarArriba(juego1){juego1.moverAvatar(1)}
+    override method presionarAbajo(juego1){juego1.moverAvatar(-1)}
 }
 
 
