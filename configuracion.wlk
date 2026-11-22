@@ -24,7 +24,7 @@ object juego {
     var puntajeLimiteSeleccionado = 50
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
-    const property marcadorMenu = new Marcador(x = 9, y = 6)
+    const property marcadorMenu = new Marcador(x = 9, y = 7)
 
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
