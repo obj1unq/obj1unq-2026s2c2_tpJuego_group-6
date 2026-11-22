@@ -127,8 +127,8 @@ object seleccionJugadores inherits EstadoJuego {
      juego1.marcadorMenu().limpiar()
      juego1.iniciarSeleccionAvatar()
      juego1.estado(seleccionAvatares)
-     /*juego1.estado(new SeleccionPuntaje())
-     juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())*/
+     //juego1.estado(new SeleccionPuntaje())
+    //juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
    }
 
    override method mostrar() {
@@ -142,8 +142,8 @@ object seleccionJugadores inherits EstadoJuego {
      game.addVisual(vistaAvatar)
      game.addVisual(fondoEnter)
      game.addVisual(teclasArribaAbajo)
-    /* game.addVisual(fondoCantidadPuntos)
-     game.addVisual(fondoLimitePuntos)*/
+     //game.addVisual(fondoCantidadPuntos)
+     //game.addVisual(fondoLimitePuntos)
    }
 
     method cantidadDeJugadoresAJugar(cantJugadores) = if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
@@ -159,8 +159,32 @@ object seleccionJugadores inherits EstadoJuego {
     }
 }
 
+object seleccionAvatares inherits EstadoJuego{ //COMPLETAR
+    override method siguienteEstado(juego1){
+      juego1.confirmarAvatar()
+      if(juego1.todosEligieronAvatar()){
+        self.mostrar()
+        juego1.estado(seleccionPuntaje)
+        juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
+      }
+    }
+    override method mostrar(){
+      game.removeVisual(fondoVisual)
+      game.removeVisual(vistaAvatar)
+      game.removeVisual(fondoEnter)
+      game.removeVisual(teclasArribaAbajo)
 
-class SeleccionPuntaje inherits EstadoJuego{
+      game.addVisual(fondoVisual)
+      game.addVisual(fondoCantidadPuntos)
+      game.addVisual(teclasArribaAbajo)
+      game.addVisual(fondoLimitePuntos)
+      game.addVisual(fondoEnter)
+    }
+    override method presionarArriba(juego1){juego1.moverAvatar(1)}
+    override method presionarAbajo(juego1){juego1.moverAvatar(-1)}
+}
+
+object seleccionPuntaje inherits EstadoJuego{
     override method siguienteEstado(juego1) {
      self.mostrar()
      juego1.estado(jugando)
@@ -228,30 +252,7 @@ object jugando inherits EstadoJuego {
     }
 }
 
-object seleccionAvatares inherits EstadoJuego{ //COMPLETAR
-    override method siguienteEstado(juego1){
-      juego1.confirmarAvatar()
-      if(juego1.todosEligieronAvatar()){
-        self.mostrar()
-        juego1.estado(new SeleccionPuntaje())
-        juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
-      }
-    }
-    override method mostrar(){
-      game.removeVisual(fondoVisual)
-      game.removeVisual(vistaAvatar)
-      game.removeVisual(fondoEnter)
-      game.removeVisual(teclasArribaAbajo)
 
-      game.addVisual(fondoVisual)
-      game.addVisual(fondoCantidadPuntos)
-      game.addVisual(teclasArribaAbajo)
-      game.addVisual(fondoLimitePuntos)
-      game.addVisual(fondoEnter)
-    }
-    override method presionarArriba(juego1){juego1.moverAvatar(1)}
-    override method presionarAbajo(juego1){juego1.moverAvatar(-1)}
-}
 
 
 object finPartida inherits EstadoJuego { 

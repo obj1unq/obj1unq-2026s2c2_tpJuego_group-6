@@ -64,8 +64,7 @@ object juego {
     }
     
     method confirmarAvatar(){
-        avataresElegidos.add(avatarCursor)
-        indiceAvatar = 0
+        avataresElegidos.add(self.avatarEnSeleccion())
         if(not self.todosEligieronAvatar()){
             jugadorEligiendo = jugadorEligiendo + 1
         }
