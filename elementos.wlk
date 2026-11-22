@@ -88,6 +88,7 @@ class Puntaje {
     method image() = "numeroPuntaje-" + numero + ".png"
 }
 
+//CREA EL PUNTAJE EN PANTALLA
 class Marcador {
     const property x
     const property y

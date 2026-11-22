@@ -88,6 +88,7 @@ object deshabilitado {
 //-------------------------------------
 
 class EstadoJuego {
+
     method siguienteEstado(juego1) //abstracto
     method mostrar() //abstracto
     method presionarArriba(juego1){}
@@ -110,40 +111,25 @@ object inicio inherits EstadoJuego {
    }
 
    override method mostrar() {
-     game.removeVisual(pantallaInicioVisual)
-
-     game.addVisual(fondoVisual)
-     game.addVisual(fondoJugadoresCantidad)
-     game.addVisual(fondojugadores)
-     game.addVisual(teclasArribaAbajo)
-     game.addVisual(fondoEnter)
+      game.removeVisual(pantallaInicioVisual)
+      game.addVisual(menuJugadoresVisual)
    }
 }
 
 
 object seleccionJugadores inherits EstadoJuego {
     override method siguienteEstado(juego1) {
-     self.mostrar()
-     juego1.marcadorMenu().limpiar()
-     juego1.iniciarSeleccionAvatar()
-     juego1.estado(seleccionAvatares)
-     //juego1.estado(new SeleccionPuntaje())
-    //juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
+      self.mostrar()
+      juego1.marcadorMenu().limpiar()
+      juego1.iniciarSeleccionAvatar()
+      juego1.estado(seleccionAvatares)
+      juego1.marcadorMenu().mostrar(juego1.jugadorEligiendo())
    }
 
    override method mostrar() {
-     game.removeVisual(fondoVisual)
-     game.removeVisual(fondoJugadoresCantidad)
-     game.removeVisual(fondojugadores)
-     game.removeVisual(teclasArribaAbajo)
-     game.removeVisual(fondoEnter)
-
-     game.addVisual(fondoVisual)
-     game.addVisual(vistaAvatar)
-     game.addVisual(fondoEnter)
-     game.addVisual(teclasArribaAbajo)
-     //game.addVisual(fondoCantidadPuntos)
-     //game.addVisual(fondoLimitePuntos)
+      game.removeVisual(menuJugadoresVisual)
+      game.addVisual(menuAvataresVisual)
+      game.addVisual(vistaAvatar)
    }
 
     method cantidadDeJugadoresAJugar(cantJugadores) = if (cantJugadores < 4) cantJugadores + 1 else cantJugadores
@@ -169,16 +155,9 @@ object seleccionAvatares inherits EstadoJuego{ //COMPLETAR
       }
     }
     override method mostrar(){
-      game.removeVisual(fondoVisual)
+      game.removeVisual(menuAvataresVisual)
       game.removeVisual(vistaAvatar)
-      game.removeVisual(fondoEnter)
-      game.removeVisual(teclasArribaAbajo)
-
-      game.addVisual(fondoVisual)
-      game.addVisual(fondoCantidadPuntos)
-      game.addVisual(teclasArribaAbajo)
-      game.addVisual(fondoLimitePuntos)
-      game.addVisual(fondoEnter)
+      game.addVisual(menuPuntajeVisual)
     }
     override method presionarArriba(juego1){juego1.moverAvatar(1)}
     override method presionarAbajo(juego1){juego1.moverAvatar(-1)}
@@ -192,12 +171,7 @@ object seleccionPuntaje inherits EstadoJuego{
    }
 
    override method mostrar() {
-     game.removeVisual(fondoVisual)
-
-     game.removeVisual(fondoCantidadPuntos)
-     game.removeVisual(teclasArribaAbajo)
-     game.removeVisual(fondoLimitePuntos)
-     game.removeVisual(fondoEnter)
+      game.removeVisual(menuPuntajeVisual)
    }
 
     method siguientePuntaje(indiceP,puntajeD) = (indiceP + 1) % puntajeD.size()
@@ -221,7 +195,7 @@ object jugando inherits EstadoJuego {
     }
 
     override method mostrar() {
-        game.removeVisual(fondoVisual)
+        game.removeVisual(menuPuntajeVisual)
    }
 
     override method presionarEspacio(juego1, selectorActual) {
@@ -252,25 +226,14 @@ object jugando inherits EstadoJuego {
     }
 }
 
-
-
-
 object finPartida inherits EstadoJuego { 
     override method siguienteEstado(juego1) {
       self.mostrar()
       juego1.estado(self)
-      game.schedule(5000, {game.stop()})
+      //game.schedule(5000, {game.stop()})
     }
 
     override method mostrar() {
       game.addVisual(fondoFinPartida)
-    }
-}
-
-object fondoFinPartida {
-    const property position = game.at(5,2)
-
-    method image() { 
-        return "youwin.png"
     }
 }
