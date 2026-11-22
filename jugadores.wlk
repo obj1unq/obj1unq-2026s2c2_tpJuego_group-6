@@ -1,6 +1,4 @@
-import estados.*
 import wollok.game.*
-import configuracion.*
 
 class Jugador {
   var puntaje = 0

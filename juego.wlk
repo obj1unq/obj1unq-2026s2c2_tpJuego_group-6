@@ -1,12 +1,13 @@
-//import juego.*
+import mainJuego.*
 import wollok.game.*
 import jugadores.*
 import tablero.*
 import elementos.*
 import estados.*
 import fondos.*
+import config.*
 
-object juego {
+object elPreso {
     var property estado = inicio // "INICIO", "SELECCION_JUGADORES", "SELECCION_AVARES", "SELECCION_PUNTAJE", "JUGANDO"
 
     const property jugadores = []
@@ -25,6 +26,13 @@ object juego {
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
     const property marcadorMenu = new Marcador(x = 9, y = 7)
+
+    method empezarJuego() {
+      configuracion.configEscenario()
+      configuracion.configControles()
+      game.addVisual(pantallaInicioVisual)
+      game.start()
+    }
 
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
@@ -116,15 +124,11 @@ object juego {
             tableros.add(t)
             game.addVisual(j)   // Muestra el sprite del jugador
             t.mostrar()
-            //game.addVisual(new Puntaje(jugador = j)) // Muestra su puntaje abajo
-            j.mostrarPuntaje()
-            
-            
+            j.mostrarPuntaje() // Muestra su puntaje abajo
         }
-
         estado = jugando
         dados.mostrar()
-        game.addVisual(selector)
+        game.addVisual(selectorCeldas)
         game.addVisual(indicadorTurno)
         self.empezarRonda()
     }
@@ -157,7 +161,7 @@ object juego {
     }
 
     method reacomodarSelector() {
-        selector.position(self.tableroActual().posicionSelector(selector.numeroSeleccionado()))
+        selectorCeldas.position(self.tableroActual().posicionSelector(selectorCeldas.numeroSeleccionado()))
     }
 
     method pasarTurnoSinJugada2() {

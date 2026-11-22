@@ -2,45 +2,6 @@ import wollok.game.*
 import elementos.*
 import jugadores.*
 import estados.*
-
-class Celda {
-    var property position
-    var property numero
-    var property estado = celdaAbierta
-    const reja = new Reja(position = position)
-
-    method image() = "numero-" + numero + ".png"
-
-    method mostrar() {
-        game.addVisual(new BordeCelda(position = position))
-        game.addVisual(self)
-    }
-
-    method alternarEstado() {
-        estado = estado.alternarEstado()
-        estado.mostrar(reja)
-    }
-
-    method LevantarReja() {
-      self.alternarEstado()
-    }
-
-    method esCeldaCerrada() = estado.tieneReja()
-
-}
-
-class BordeCelda {
-    var property position
-
-    method image() = "borde-negro.png"
-}
-
-class Reja {
-    var property position 
-
-    method image() = "reja-cerrada.png"
-}
-
 class Tablero {
     var estadoEleccion = noElegido //elegido o noElegido, indica si se puede elegir algunas de las celdas. CAMBIAR SI ES NECESARIO
     const posicionInicial
@@ -96,7 +57,7 @@ class Tablero {
         celda.alternarEstado()
         self.agregarCeldaElegida(celda)
         self.evaluarElegidas(puntaje)
-        self.mostrarVisualSelector(selector) //CAMBIAR
+        self.mostrarVisualSelector(selectorCeldas) //CAMBIAR
     }
 
     method mostrarVisualSelector(selector) {
@@ -115,7 +76,7 @@ class Tablero {
     }
 
     method evaluarElegidas(puntaje){
-        self.mostrarVisualSelector(selector) //CAMBIAR
+        self.mostrarVisualSelector(selectorCeldas) //CAMBIAR
         self.validarEvaluarElegidas(self.sumaElegidas(),puntaje) //revisar porque con la validacion tapa el borde rojo de la celda al sacar el mostrarVisualSelector
         celdasElegidas.forEach({celda => celda.alternarEstado()})
         celdasElegidas.clear()

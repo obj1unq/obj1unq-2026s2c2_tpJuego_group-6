@@ -1,4 +1,3 @@
-import configuracion.*
 import fondos.*
 
 //-------------------------------------
@@ -172,6 +171,7 @@ object seleccionPuntaje inherits EstadoJuego{
 
    override method mostrar() {
       game.removeVisual(menuPuntajeVisual)
+      game.addVisual(fondoVisual)
    }
 
     method siguientePuntaje(indiceP,puntajeD) = (indiceP + 1) % puntajeD.size()
@@ -195,7 +195,7 @@ object jugando inherits EstadoJuego {
     }
 
     override method mostrar() {
-        game.removeVisual(menuPuntajeVisual)
+        game.addVisual(fondoVisual)//cambiar por que esta de mas
    }
 
     override method presionarEspacio(juego1, selectorActual) {
