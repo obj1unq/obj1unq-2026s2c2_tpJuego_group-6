@@ -1,6 +1,43 @@
 import wollok.game.*
-import configuracion.*
 import estados.*
+
+class Celda {
+    var property position
+    var property numero
+    var property estado = celdaAbierta
+    const reja = new Reja(position = position)
+
+    method image() = "numero-" + numero + ".png"
+
+    method mostrar() {
+        game.addVisual(new BordeCelda(position = position))
+        game.addVisual(self)
+    }
+
+    method alternarEstado() {
+        estado = estado.alternarEstado()
+        estado.mostrar(reja)
+    }
+
+    method LevantarReja() {
+      self.alternarEstado()
+    }
+
+    method esCeldaCerrada() = estado.tieneReja()
+
+}
+
+class BordeCelda {
+    var property position
+
+    method image() = "borde-negro.png"
+}
+
+class Reja {
+    var property position 
+
+    method image() = "reja-cerrada.png"
+}
 
 class Dado {
     var property numero = 1
@@ -47,7 +84,7 @@ object dados {
     }
 }
 
-object selector {
+object selectorCeldas {
     var property position = game.at(1,5)//game.origin().right(1).up(5)
     var property numero = 1
 

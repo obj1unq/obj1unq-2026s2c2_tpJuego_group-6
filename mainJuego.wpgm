@@ -1,38 +1,6 @@
 import wollok.game.*
-import jugadores.*
-import elementos.*
-import tablero.*
-import configuracion.*
-import estados.*
-import fondos.*
+import juego.*
 
-object config {
-  method configurarEscenario() {
-    game.title("El Preso")
-    game.height(11)
-    game.width(14)
-    game.cellSize(64)
-    game.boardGround("prisionfondo.png")
-  }
-}
-
-program ElPreso {
-  config.configurarEscenario()
-  game.addVisual(pantallaInicioVisual)
-  
-  // Controles de menú
-  keyboard.enter().onPressDo({ juego.presionarEnter() })
-  keyboard.up().onPressDo({ juego.presionarArriba() })
-  keyboard.down().onPressDo({ juego.presionarAbajo() })
-  
-  // Controles dentro del juego
-  keyboard.right().onPressDo({ juego.moverDerecha(selector) })
-  keyboard.left().onPressDo({ juego.moverIzquierda(selector) })
-  keyboard.space().onPressDo({ juego.presionarEspacio(selector) })
-  keyboard.g().onPressDo({ juego.presionarG() })
-  keyboard.p().onPressDo({ juego.presionarP() })
-  keyboard.c().onPressDo({ juego.presionarC() })
-  //keyboard.t().onPressDo({ juego.alterarRejasCeldas() })
-  
-  game.start()
+program Juego {
+  elPreso.empezarJuego()
 }

@@ -1,4 +1,4 @@
-import configuracion.*
+import juego.*
 object pantallaInicioVisual {
     var property position = game.at(-1, 0)
     method image() = "pantalla-inicio.png"
@@ -23,10 +23,11 @@ object menuPuntajeVisual {
 
 object fondoVisual {
     var property position = game.at(-1, 0)
-    method image() = "celdas.png"
+    method image() = "prisionfondo.png"
 }
 
 object indicadorTurno {
+    const juego = elPreso
     method position() {
         // Se ubica un casillero arriba del jugador que tiene el turno actual
         return juego.jugadorActual().position().right(1)
@@ -41,6 +42,7 @@ object teclasArribaAbajo {
 }
 
 object vistaAvatar {
+  const juego = elPreso
   var property position = game.at(6,4)
   method image() = "amongusGrande-" + juego.avatarEnSeleccion() + ".png"
   //method text() = "Jugador " + juego.jugadorEligiendo() 
