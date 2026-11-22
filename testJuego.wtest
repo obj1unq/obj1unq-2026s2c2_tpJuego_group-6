@@ -1,11 +1,155 @@
-import wollok.game.*
 import estados.*
-import tablero.*
+import elementos.*
+import wollok.game.*
+import juego.*
 
-// describe "tests del juego El Preso" {
+describe "Movimiento de selector" {
 
-//     method initialize() {
-//         config.configurarEscenario()
-        
-//     }
-// }
+    test "selector de celdas esta en la posicion 1 y 5" {
+        assert.equals(game.at(1,5), selectorCeldas.position())
+    }
+
+    test "selector de celdas se mueve 2 veces a la derecha" {
+        selectorCeldas.moverDerecha()
+        selectorCeldas.moverDerecha()
+        assert.equals(game.at(3,5), selectorCeldas.position())
+    }
+
+    test "selector de celdas se mueve 4 veces a la derecha y una vez a la izquierda" {
+        selectorCeldas.moverDerecha()
+        selectorCeldas.moverDerecha()
+        selectorCeldas.moverDerecha()
+        selectorCeldas.moverDerecha()
+        selectorCeldas.moverIzquierda()
+        assert.equals(game.at(4,5), selectorCeldas.position())
+    }
+
+    test "selector de celdas se mueve 1 vez a la izquierda pero no puede" {
+        assert.throwsException({selectorCeldas.moverIzquierda()})
+        assert.equals(game.at(1,5), selectorCeldas.position())
+    }
+
+    test "el numero de selector se mueve a la derecha y su numero es 2" {
+        selectorCeldas.moverDerecha()
+        assert.equals(2, selectorCeldas.numero())
+    }
+}
+
+describe "Dados" {
+    test "al querer tirar los dados pero no puede" {
+        dados.estadoDado(deshabilitado)
+        assert.throwsException({dados.tirar()})
+    }
+
+    test "al tirar dados habilitados el puntaje esta entre 2 y 12" {
+        dados.estadoDado(habilitado)
+        dados.tirar()
+
+        assert.that(dados.puntaje() >= 2)
+        assert.that(dados.puntaje() <= 12)
+    }
+
+    test "después de tirar dados no se puede volver a tirar" {
+        dados.estadoDado(habilitado)
+        dados.tirar()
+
+        assert.throwsException({dados.tirar()})
+    }
+
+    test "habilitar la jugada permite volver a tirar los dados" {
+        dados.estadoDado(habilitado)
+        dados.tirar()
+        dados.habilitarJugadaDado()
+
+        assert.doesNotThrowException({dados.tirar()})
+    }
+}
+
+describe "Marcador" {
+    const marcador = new Marcador(x = 1, y = 8)
+
+  method initialize() {
+    game.clear()
+  }
+
+  test "un numero de un digito dibuja un solo visual" {
+    marcador.mostrar(5)
+    assert.equals(1, game.allVisuals().size())
+  }
+
+  test "mostrar de nuevo reemplaza el numero anterior" {
+    marcador.mostrar(50)
+    marcador.mostrar(132)
+    assert.equals(3, game.allVisuals().size())
+  }
+
+  test "limpiar saca todos los digitos" {
+    marcador.mostrar(150)
+    marcador.limpiar()
+    assert.equals(0, game.allVisuals().size())
+  }
+
+  test "limpiar sin nada dibujado no rompe" {
+    marcador.limpiar()
+    assert.equals(0, game.allVisuals().size())
+  }
+}
+
+describe "estados del ElPreso" {
+    test "el estado es inicio" {
+     assert.equals(inicio, elPreso.estado())
+    }
+
+    test "el estado paso a seleccion de avatares" {
+        elPreso.presionarEnter()
+        elPreso.presionarEnter()
+        assert.equals(seleccionAvatares, elPreso.estado())
+    }
+
+    test "cantidad de 3 jugadores en seleccion de jugadores" {
+        elPreso.presionarEnter()
+        elPreso.presionarArriba()
+        assert.equals(3, elPreso.cantidadJugadoresSeleccionada())
+    }
+
+    test "cantidad de 4 jugadores en seleccion de jugadores y despues 3" {
+        elPreso.presionarEnter()
+        elPreso.presionarArriba()
+        elPreso.presionarArriba()
+        assert.equals(4, elPreso.cantidadJugadoresSeleccionada())
+
+        elPreso.presionarAbajo()
+        assert.equals(3, elPreso.cantidadJugadoresSeleccionada())
+    }
+}
+
+describe "Pasar de turno" {
+    method initialize() {
+        game.clear()
+        elPreso.jugadores().clear()
+        elPreso.tableros().clear()
+        elPreso.estado(inicio)
+        selectorCeldas.position(game.at(1,5))
+        selectorCeldas.numero(1)
+
+        elPreso.presionarEnter()
+        elPreso.presionarEnter()
+        elPreso.presionarEnter()
+        elPreso.presionarEnter()
+        elPreso.presionarEnter()
+    }
+
+    test "puede pasar al siguiente jugador" {
+        assert.equals(1, elPreso.jugadorActual().numero())
+
+        elPreso.pasarTurno()
+
+        assert.equals(2, elPreso.jugadorActual().numero())
+    }
+
+    test "no puede pasar de turno si todavia hay una jugada posible" {
+        assert.that(elPreso.tableroActual().hayJugadaPosible())
+        assert.throwsException({elPreso.pasarTurnoSinJugada()})
+        assert.equals(1, elPreso.jugadorActual().numero())
+    }
+}

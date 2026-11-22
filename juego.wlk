@@ -26,6 +26,7 @@ object elPreso {
     const puntajesDisponibles = [50, 100, 150]
     var indicePuntaje = 0
     const property marcadorMenu = new Marcador(x = 9, y = 7)
+    const property marcadorGanador = new Marcador(x = 7, y = 4)
 
     method empezarJuego() {
       configuracion.configEscenario()
@@ -164,13 +165,13 @@ object elPreso {
         selectorCeldas.position(self.tableroActual().posicionSelector(selectorCeldas.numeroSeleccionado()))
     }
 
-    method pasarTurnoSinJugada2() {
-        if (not self.tableroActual().hayJugadaPosible()) {
-            self.terminarParticipacion()
-            self.pasarTurno()
-            //dados.tirar() //dejarlo o no a criterio
-        }
-    }
+    // method pasarTurnoSinJugada2() {
+    //     if (not self.tableroActual().hayJugadaPosible()) {
+    //         self.terminarParticipacion()
+    //         self.pasarTurno()
+    //         //dados.tirar() //dejarlo o no a criterio
+    //     }
+    // }
 
     method pasarTurnoSinJugada() {
         self.validarNoHayJugadaPosible()
@@ -218,7 +219,16 @@ object elPreso {
     }
 
     method terminarPartida() {
-        estado.siguienteEstado(self)
+        ganadorVisual.ganador(self.mostrarGanador())
+        finPartida.siguienteEstado(self)
+    }
+
+    method mostrarGanador() {
+      return if (self.jugadoresActivos().isEmpty()) {
+        jugadores.min({j => j.puntaje()})
+      } else {
+        self.jugadoresActivos().first()
+      }
     }
 
     method moverDerecha(selector) {
@@ -266,7 +276,7 @@ object elPreso {
     method tirarDados() {
         dados.tirar()
         self.tableroActual().habilitarJugada()
-        self.pasarTurnoSinJugada2()
+        self.pasarTurnoSinJugada()
     }
 
     method confirmarJugada() {

@@ -1,4 +1,5 @@
 import fondos.*
+import elementos.*
 
 //-------------------------------------
 //ESTADOS DEL TABLERO
@@ -228,12 +229,16 @@ object jugando inherits EstadoJuego {
 
 object finPartida inherits EstadoJuego { 
     override method siguienteEstado(juego1) {
+      juego1.marcadorMenu().limpiar()
+      game.clear()
       self.mostrar()
+      juego1.marcadorGanador().mostrar(ganadorVisual.ganador().numero())
       juego1.estado(self)
       //game.schedule(5000, {game.stop()})
     }
 
     override method mostrar() {
       game.addVisual(fondoFinPartida)
+      game.addVisual(ganadorVisual)
     }
 }
