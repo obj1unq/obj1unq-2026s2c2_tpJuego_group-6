@@ -1,11 +1,39 @@
 import wollok.game.*
 import estados.*
 import tablero.*
+import juego.*
 
-// describe "tests del juego El Preso" {
+describe "Seleccion de avatares" {
 
-//     method initialize() {
-//         config.configurarEscenario()
-        
-//     }
-// }
+    method initialize() {
+        elPreso.iniciarSeleccionAvatar()
+    }
+
+    test "arranca con el primer avatar" {
+        assert.equals(1, elPreso.avatarEnSeleccion())
+    }
+
+    test "avanzar pasa al siguiente" {
+        elPreso.moverAvatar(1)
+        assert.equals(2, elPreso.avatarEnSeleccion())
+    }
+
+    test "retroceder desde el primero va al ultimo" {
+        elPreso.moverAvatar(-1)
+        assert.equals(8, elPreso.avatarEnSeleccion())
+    }
+
+    test "confirmar guarda el avatar y pasa al siguiente jugador" {
+        elPreso.moverAvatar(1)
+        elPreso.confirmarAvatar()
+        assert.equals([2], elPreso.avataresElegidos())
+        assert.equals(2, elPreso.jugadorEligiendo())
+    }
+
+    test " termina al confirmar el segundo" {
+        elPreso.confirmarAvatar()
+        assert.notThat(elPreso.todosEligieronAvatar())
+        elPreso.confirmarAvatar()
+        assert.that(elPreso.todosEligieronAvatar())
+    }
+}

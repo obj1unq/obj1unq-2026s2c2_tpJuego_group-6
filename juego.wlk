@@ -16,7 +16,7 @@ object elPreso {
     var participantesRonda = []
 
     const avataresDisponibels = [1,2,3,4,5,6,7,8]
-    const avataresElegidos = []
+    const property avataresElegidos = []
     var avatarCursor = 1
     var jugadorEligiendo = 1
     var indiceAvatar = 0
@@ -45,6 +45,7 @@ object elPreso {
     method iniciarSeleccionAvatar(){
         avataresElegidos.clear()
         jugadorEligiendo = 1
+        indiceAvatar = 0
         avatarCursor = self.avataresDisponibles().first()
     }
     //no se me ocurre como hacer sin recursion
@@ -130,14 +131,14 @@ object elPreso {
         dados.mostrar()
         game.addVisual(selectorCeldas)
         game.addVisual(indicadorTurno)
-        self.empezarRonda()
+        self.empezarRonda(jugadores)
     }
 
     method tableroActual() = self.jugadorActual().tablero()
 
     method jugadorActual() = jugadores.get(indiceTurno)
 
-    method estaEnJuego(jugador) = not jugador.estaEliminado() and not jugador.terminoRonda()
+    method estaEnJuego(jugador) = participantesRonda.contains(jugador) and not jugador.terminoRonda()
 
     method hayJugadoresEnJuego() = jugadores.any({ j => self.estaEnJuego(j) })
 
@@ -201,24 +202,31 @@ object elPreso {
 
     method terminarRonda() {
         const restantes = self.jugadoresActivos()
-        if (restantes.size() <= 1) {
+        if (restantes.size() == 1) {
             self.terminarPartida()
+            }else if(restantes.isEmpty()){
+                self.empezarOvertime()
             }else {
-            self.empezarRonda()
+            self.empezarRonda(restantes)
         }
     }
 
-    method empezarRonda() {
+    method empezarOvertime(){
+        participantesRonda.forEach({jugador=> jugador.reiniciarPuntaje()})
+        self.empezarRonda(participantesRonda)
+    }
+
+    method empezarRonda(participantes) {
+        participantesRonda = participantes
         tableros.forEach({ tablero => tablero.reiniciarCelda() })
         jugadores.forEach({ jugador => jugador.terminoRonda(false) }) //CAMBIAR ESE FALSE
-        participantesRonda = self.jugadoresActivos()
         indiceTurno = 0
         self.saltearQuienNoJuega()
         self.reacomodarSelector()
     }
 
     method terminarPartida() {
-        estado.siguienteEstado(self)
+        finPartida.siguienteEstado(self)
     }
 
     method moverDerecha(selector) {
