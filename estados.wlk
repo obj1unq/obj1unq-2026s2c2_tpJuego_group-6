@@ -127,6 +127,7 @@ object seleccionJugadores inherits EstadoJuego {
      juego1.marcadorMenu().limpiar()
      juego1.iniciarSeleccionAvatar()
      juego1.estado(seleccionAvatares)
+     juego1.marcadorMenu().mostrar(juego1.jugadorEligiendo())
      //juego1.estado(new SeleccionPuntaje())
     //juego1.marcadorMenu().mostrar(juego1.puntajeLimiteSeleccionado())
    }
@@ -137,8 +138,10 @@ object seleccionJugadores inherits EstadoJuego {
      game.removeVisual(fondojugadores)
      game.removeVisual(teclasArribaAbajo)
      game.removeVisual(fondoEnter)
-
+     
      game.addVisual(fondoVisual)
+     game.addVisual(fondojugadores)
+     game.addVisual(seleccionarAvataresFondo)
      game.addVisual(vistaAvatar)
      game.addVisual(fondoEnter)
      game.addVisual(teclasArribaAbajo)
@@ -170,7 +173,9 @@ object seleccionAvatares inherits EstadoJuego{ //COMPLETAR
     }
     override method mostrar(){
       game.removeVisual(fondoVisual)
+      game.removeVisual(fondojugadores)
       game.removeVisual(vistaAvatar)
+      game.removeVisual(seleccionarAvataresFondo)
       game.removeVisual(fondoEnter)
       game.removeVisual(teclasArribaAbajo)
 

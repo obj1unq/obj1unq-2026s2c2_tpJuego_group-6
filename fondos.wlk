@@ -41,7 +41,7 @@ object fondoJugadoresCantidad {
 }
 
 object fondojugadores {
-    var property position = game.at(3,2)
+    var property position = game.at(3,3)
 
     method image() = "jugadoresFondo.png"
 }
@@ -70,7 +70,13 @@ object fondoEnter {
     method image() = "presionarenter.png"
 }
 object vistaAvatar {
-  var property position = game.at(6,4)
-  method image() = "amongus-" + juego.avatarEnSeleccion() + ".png"
-  method text() = "Jugador " + juego.jugadorEligiendo() 
+  var property position = game.at(5,3)
+  method image() = "amongusGrande-" + juego.avatarEnSeleccion() + ".png"
+  //method text() = "Jugador " + juego.jugadorEligiendo() 
+}
+
+object seleccionarAvataresFondo {
+    var property position = game.at(3,-2)
+
+    method image() = "seleccionarAvataresPrueba.png"
 }
