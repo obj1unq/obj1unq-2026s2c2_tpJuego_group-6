@@ -62,5 +62,5 @@ object ganadorVisual {
 
     method image() = ganador.image()
 
-    method text() = "Gano el jugador nro " + ganador.numero() + "!"
+    method text() = "Gano el jugador nro " + ganador.numero() + " !!!"
 }
