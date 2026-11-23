@@ -10,6 +10,13 @@ class Jugador {
   const tablero
   const marcador
   var property avatar   
+
+  method puntaje() = puntaje
+
+  method reiniciarPuntaje(){
+    puntaje = 0
+    marcador.mostrar(puntaje)
+  }
   
   method sumarPuntos(puntos) {
     puntaje = puntaje + puntos
