@@ -55,3 +55,12 @@ object fondoFinPartida {
         return "youwin.png"
     }
 }
+
+object ganadorVisual {
+    var property position = game.center()
+    var property ganador = null
+
+    method image() = ganador.image()
+
+    method text() = "Gano el jugador nro " + ganador.numero() + "!"
+}
