@@ -49,18 +49,21 @@ object vistaAvatar {
 }
 
 object fondoFinPartida {
-    const property position = game.at(5,2)
+    const property position = game.at(-1,0)
 
     method image() { 
-        return "youwin.png"
+        return "fondoGanador.png"
     }
 }
 
 object ganadorVisual {
-    var property position = game.center()
+    var property position = game.at(6,4)
     var property ganador = null
 
-    method image() = ganador.image()
+    method image() = "amongusGrande-" + ganador.avatar() + ".png"
+}
 
-    method text() = "Gano el jugador nro " + ganador.numero() + " !!!"
+object fondoTutorialTeclas {
+    var property position = game.at(-1, 0)
+    method image() = "fondoTutorialTeclas.png"
 }

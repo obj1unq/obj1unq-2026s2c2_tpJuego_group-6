@@ -23,10 +23,10 @@ object elPreso {
 
     var cantidadJugadoresSeleccionada = 2
     var puntajeLimiteSeleccionado = 50
-    const puntajesDisponibles = [50, 100, 150]
+    const puntajesDisponibles = [20,50, 100, 150]//sacar ese 20
     var indicePuntaje = 0
     const property marcadorMenu = new Marcador(x = 9, y = 7)
-    const property marcadorGanador = new Marcador(x = 7, y = 4)
+    const property marcadorGanador = new Marcador(x = 8, y = 3)
 
     method empezarJuego() {
       configuracion.configEscenario()
@@ -83,8 +83,16 @@ object elPreso {
 
     method todosEligieronAvatar()= avataresElegidos.size() == cantidadJugadoresSeleccionada
 
-    method presionarEnter() {
-        estado.siguienteEstado(self)  //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
+    // method presionarEnter() {
+    //     estado.siguienteEstado(self)  //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
+    // }
+
+    method presionarEnter() { //AVANZA A LOS SIGUIENTE ESTADOS DEL JUEGO
+      estado.presionarEnter(self)
+    }
+
+    method avanzarEstado() {
+      estado.siguienteEstado(self)
     }
 
     method incrementarJugadores() {
@@ -166,14 +174,6 @@ object elPreso {
         selectorCeldas.position(self.tableroActual().posicionSelector(selectorCeldas.numeroSeleccionado()))
     }
 
-    // method pasarTurnoSinJugada2() {
-    //     if (not self.tableroActual().hayJugadaPosible()) {
-    //         self.terminarParticipacion()
-    //         self.pasarTurno()
-    //         //dados.tirar() //dejarlo o no a criterio
-    //     }
-    // }
-
     method pasarTurnoSinJugada() {
         self.validarNoHayJugadaPosible()
         self.terminarParticipacion()
@@ -227,7 +227,7 @@ object elPreso {
     }
 
     method terminarPartida() {
-        ganadorVisual.ganador(self.mostrarGanador()) //CAMBIOS NUEVOS DE ACA HASTA
+        ganadorVisual.ganador(self.mostrarGanador()) 
         finPartida.siguienteEstado(self)
     }
 
@@ -237,7 +237,7 @@ object elPreso {
       } else {
         self.jugadoresActivos().first()
       }
-    }                                                 //HASTA ACA
+    }
 
     method moverDerecha(selector) {
         //selector.moverDerecha()
@@ -265,12 +265,8 @@ object elPreso {
         estado.presionarG(self)
     }
 
-    method presionarP() {
-        estado.presionarP(self)
-    }
-
-    method presionarC() {
-        estado.presionarC(self)
+    method presionarDelete() {
+        estado.presionarDelete(self)
     }
 
     method alterarRejasCeldas() {

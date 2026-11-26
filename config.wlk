@@ -21,7 +21,7 @@ object configuracion {
         keyboard.left().onPressDo({ juego.moverIzquierda(selector) })
         keyboard.space().onPressDo({ juego.presionarEspacio(selector) })
         keyboard.g().onPressDo({ juego.presionarG() })
-        keyboard.p().onPressDo({ juego.presionarP() })
-        keyboard.c().onPressDo({ juego.presionarC() })
+        //keyboard.p().onPressDo({ juego.presionarP() }) //CONFIRMAR JUGADA PASA A SER EL ENTER
+        keyboard.backspace().onPressDo({ juego.presionarDelete() }) //CANCELAR JUGADA PASA DE TECLA C A DELETE
   }
 }
