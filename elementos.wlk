@@ -55,6 +55,10 @@ object dados {
     const dado2 = new Dado(position = game.at(6,1))
     var estadoDado = habilitado //HABILITADO PARA TIRAR DADO Y DESHABILITADO CUANDO NO PUEDE TIRAR. CAMBIAR NOMBRES SI ES NECESARIO
 
+    method estadoDado(_estadoDado) {
+      estadoDado = _estadoDado
+    }
+    
     method mostrar(){
         game.addVisual(dado1)
         game.addVisual(dado2)
