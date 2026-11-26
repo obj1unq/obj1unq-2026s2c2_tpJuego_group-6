@@ -1,5 +1,6 @@
 import wollok.game.*
 import estados.*
+import fondos.*
 
 class Celda {
     var property position
@@ -60,8 +61,12 @@ object dados {
     }
     
     method mostrar(){
-        game.addVisual(dado1)
-        game.addVisual(dado2)
+        game.addVisual(avisoTirarDados)
+    }
+    method mostrarAviso(){
+        game.removeVisual(dado1)
+        game.removeVisual(dado2)
+        game.addVisual(avisoTirarDados)
     }
 
     method tirar(){
@@ -69,6 +74,7 @@ object dados {
         estadoDado = deshabilitado
         dado1.tirar()
         dado2.tirar()
+        self.mostrarResultado()
     }
 
     method puntaje() = dado1.numero() + dado2.numero() 
@@ -80,7 +86,13 @@ object dados {
     }
 
     method habilitarJugadaDado() {
+        estadoDado.habilitar(self)
         estadoDado = habilitado
+    }
+    method mostrarResultado(){
+        game.removeVisual(avisoTirarDados)
+        game.addVisual(dado1)
+        game.addVisual(dado2)
     }
 }
 

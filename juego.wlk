@@ -15,10 +15,8 @@ object elPreso {
     var indiceTurno = 0
     var participantesRonda = []
 
-    const avataresDisponibels = [1,2,3,4,5,6,7,8]
+    const avataresLibres = []
     const property avataresElegidos = []
-    var avatarCursor = 1
-    var jugadorEligiendo = 1
     var indiceAvatar = 0
 
     var cantidadJugadoresSeleccionada = 2
@@ -38,47 +36,35 @@ object elPreso {
     method cantidadJugadoresSeleccionada() = cantidadJugadoresSeleccionada
     method puntajeLimiteSeleccionado() = puntajeLimiteSeleccionado
 
-    method avatarEnSeleccion() = avataresDisponibels.get(indiceAvatar)
-    method jugadorEligiendo() = jugadorEligiendo
+    method avatarEnSeleccion() = avataresLibres.get(indiceAvatar)
+    method jugadorEligiendo() = avataresElegidos.size() + 1
 
-    method avataresDisponibles() = avataresDisponibels.filter({avatar => not avataresElegidos.contains(avatar)})
 
     method iniciarSeleccionAvatar(){
+        avataresLibres.clear()
+        avataresLibres.addAll([1,2,3,4,5,6,7,8])
         avataresElegidos.clear()
-        jugadorEligiendo = 1
-        indiceAvatar = 0
-        avatarCursor = self.avataresDisponibles().first()
-    }
-    //no se me ocurre como hacer sin recursion
-    method siguienteLibre(desde, avatar){
-        const total = avataresDisponibels.size()
-        const elegido = ((desde - 1 + avatar) % total) + 1
-        return if(avataresElegidos.contains(elegido)){
-            self.siguienteLibre(elegido, avatar)
-        }else{
-            elegido
-        }
-    }
-    method iniciarSeleccion(){
-        avataresElegidos.clear()
-        jugadorEligiendo = 1
         indiceAvatar = 0
     }
     
+    method esAvatarElegido(avatar) = avataresElegidos.contains(avatar)
+
+    method validarAvatarLibre(avatar){
+        if(self.esAvatarElegido(avatar)){
+            self.error("Este avatar ya fue elegido")
+        }
+    }
 
     method moverAvatar(avatar){
-        avatarCursor = self.siguienteLibre(avatarCursor, avatar)
-        const total = avataresDisponibels.size()
-        indiceAvatar = (indiceAvatar + avatar + total) % total
-
+        indiceAvatar = (indiceAvatar + avatar + avataresLibres.size()) % avataresLibres.size()
     }
     
     method confirmarAvatar(){
-        avataresElegidos.add(self.avatarEnSeleccion())
-        if(not self.todosEligieronAvatar()){
-            jugadorEligiendo = jugadorEligiendo + 1
-            marcadorMenu.mostrar(jugadorEligiendo)
-        }
+        const elegido = self.avatarEnSeleccion()
+        self.validarAvatarLibre(elegido)
+        avataresElegidos.add(elegido)
+        avataresLibres.remove(elegido)
+        indiceAvatar = 0
     }
 
     method todosEligieronAvatar()= avataresElegidos.size() == cantidadJugadoresSeleccionada
@@ -285,7 +271,7 @@ object elPreso {
 
     method confirmarJugada() {
         self.tableroActual().confirmarJugada(self.jugadorActual())
-        if (self.tableroActual().cadaCeldaEstaCerrada()) {
+        if (self.tableroActual().yaNoHayJugadas()) {
             self.terminarParticipacion()
         }
         self.pasarTurno()

@@ -67,3 +67,8 @@ object fondoTutorialTeclas {
     var property position = game.at(-1, 0)
     method image() = "fondoTutorialTeclas.png"
 }
+
+object avisoTirarDados {
+  var property position = game.at(5,1)
+  method image() = "probando.png" 
+}

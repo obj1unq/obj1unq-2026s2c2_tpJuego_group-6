@@ -30,6 +30,7 @@ class Tablero {
       //entre las celdas abiertas, chequea si hay al menos una que cumpla con el puntaje de los dados actual
       return celdas.any({celda => not celda.esCeldaCerrada() and celda.numero() == dados.puntaje()})
     }
+    method yaNoHayJugadas() = self.cadaCeldaEstaCerrada() || self.celdasRestantes() == 1 
 
     method hayDosCeldasPosible() {
       //busca las dos celdas posibles que de la suma de esas dos celdas, de el puntaje de los dados actual

@@ -2,6 +2,7 @@ import estados.*
 import elementos.*
 import wollok.game.*
 import juego.*
+import tablero.*
 
 describe "Movimiento de selector" {
 
@@ -193,4 +194,17 @@ describe "Seleccion de avatares" {
         assert.that(elPreso.todosEligieronAvatar())
     }
 }
-
+describe "tablero cuando no hay jugadas rstantes" {
+    const tablero = new Tablero(posicionInicial = game.at(1, 3))
+    method cerrarTodasMenos(dados) {
+    (1..9).filter({ dado => not dados.contains(dado) }).forEach({ dado => tablero.alternarCelda(dado) })
+  }
+  test "con todas las celdas abiertas todavía hay jugadas" {
+    assert.notThat(tablero.yaNoHayJugadas())
+  }
+  test "con solo la celda 1 ya no hay jugadas" {
+    self.cerrarTodasMenos([1])
+    assert.equals(1, tablero.celdasRestantes())
+    assert.that(tablero.yaNoHayJugadas())
+  }
+}

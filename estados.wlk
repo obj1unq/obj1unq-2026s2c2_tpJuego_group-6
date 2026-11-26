@@ -69,12 +69,14 @@ object habilitado {
    method puedeTirar(){
     return true
    }
+   method habilitar(dados){}
 }
 object deshabilitado {
 
    method puedeTirar(){
     return false
    }
+   method habilitar(dados){dados.mostrarAviso()}
 }
 
 //-------------------------------------
