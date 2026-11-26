@@ -101,19 +101,22 @@ describe "estados del ElPreso" {
     }
 
     test "el estado paso a seleccion de avatares" {
-        elPreso.presionarEnter()
-        elPreso.presionarEnter()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
         assert.equals(seleccionAvatares, elPreso.estado())
     }
 
     test "cantidad de 3 jugadores en seleccion de jugadores" {
-        elPreso.presionarEnter()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
         elPreso.presionarArriba()
         assert.equals(3, elPreso.cantidadJugadoresSeleccionada())
     }
 
     test "cantidad de 4 jugadores en seleccion de jugadores y despues 3" {
-        elPreso.presionarEnter()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
         elPreso.presionarArriba()
         elPreso.presionarArriba()
         assert.equals(4, elPreso.cantidadJugadoresSeleccionada())
@@ -132,11 +135,12 @@ describe "Pasar de turno" {
         selectorCeldas.position(game.at(1,5))
         selectorCeldas.numero(1)
 
-        elPreso.presionarEnter()
-        elPreso.presionarEnter()
-        elPreso.presionarEnter()
-        elPreso.presionarEnter()
-        elPreso.presionarEnter()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
+        elPreso.avanzarEstado()
     }
 
     test "puede pasar al siguiente jugador" {

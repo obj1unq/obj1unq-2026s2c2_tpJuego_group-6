@@ -58,7 +58,7 @@ object dados {
     method estadoDado(_estadoDado) {
       estadoDado = _estadoDado
     }
-
+    
     method mostrar(){
         game.addVisual(dado1)
         game.addVisual(dado2)
@@ -66,7 +66,7 @@ object dados {
 
     method tirar(){
         self.validarSipuedeTirarDados()
-        estadoDado.avanzarEstado(self)
+        estadoDado = deshabilitado
         dado1.tirar()
         dado2.tirar()
     }
@@ -80,7 +80,7 @@ object dados {
     }
 
     method habilitarJugadaDado() {
-        estadoDado.avanzarEstado(self)
+        estadoDado = habilitado
     }
 }
 

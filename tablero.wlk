@@ -44,7 +44,11 @@ class Tablero {
     }
 
     method hayJugadaPosible() {
-      return self.hayUnaCeldaPosible() or self.hayDosCeldasPosible()
+      return self.hayUnaCeldaPosible() or self.hayDosCeldasPosible() or not self.esCelda1()
+    }
+
+    method esCelda1() {
+      return celdas.any({celda => celda.numero() == 1})
     }
 
     method habilitarJugada() {

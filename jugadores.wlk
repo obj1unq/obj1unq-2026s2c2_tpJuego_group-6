@@ -15,17 +15,17 @@ class Jugador {
 
   method reiniciarPuntaje(){
     puntaje = 0
-    marcador.mostrar(puntaje)
+    self.mostrarPuntaje()
   }
   
   method sumarPuntos(puntos) {
     puntaje = puntaje + puntos
-    marcador.mostrar(puntaje)
+    self.mostrarPuntaje()
   }
   
   method restar10() {
     puntaje = (puntaje - 10).max(0)
-    marcador.mostrar(puntaje)
+    self.mostrarPuntaje()
   }
 
   method mostrarPuntaje() {
